@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AP European History Evidence Mapper</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 36px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.3em;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 1.05em;
+            opacity: 0.92;
+        }
+
+        .top-strip {
+            padding: 22px 40px;
+            background: #f8f9ff;
+            border-bottom: 1px solid #e1e5ff;
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 20px;
+            align-items: end;
+        }
+
+        @media (max-width: 768px) {
+            .top-strip {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
+        }
+
+        .student-box, .reset-box {
+            background: white;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+            padding: 16px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .student-box h2, .reset-box h2 {
+            color: #667eea;
+            font-size: 1.15em;
+            margin-bottom: 8px;
+        }
+
+        .student-actions, .reset-actions, .form-actions, .export-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .small-note {
+            color: #666;
+            font-size: 0.9em;
+            margin: 6px 0 10px 0;
+            line-height: 1.35;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 36px 40px;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+                padding: 24px 20px;
+            }
+        }
+
+        .section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .section h2 {
+            color: #667eea;
+            font-size: 1.5em;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-top: 12px;
+            color: #333;
+        }
+
+        textarea, select, input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        textarea:focus, select:focus, input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 8px rgba(102, 126, 234, 0.3);
+        }
+
+        textarea {
+            min-height: 96px;
+            resize: vertical;
+        }
+
+        .source-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        @media (max-width: 600px) {
+            .source-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .source-help {
+            background: #fff8e6;
+            border-left: 4px solid #f4b400;
+            border-radius: 6px;
+            padding: 12px 14px;
+            color: #4d3b00;
+            font-size: 0.92em;
+            line-height: 1.4;
+        }
+
+        .source-help summary {
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        .source-help ul {
+            margin: 8px 0 0 20px;
+        }
+
+        .concepts-list {
+            background: #f8f9ff;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #667eea;
+        }
+
+        .concept-item {
+            background: white;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 4px;
+            border-left: 4px solid #764ba2;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .concept-item input[type="checkbox"] {
+            width: auto;
+            margin: 5px 0 0 0;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .concept-content {
+            flex: 1;
+        }
+
+        .concept-item label {
+            margin: 0;
+            cursor: pointer;
+            font-weight: normal;
+            line-height: 1.35;
+        }
+
+        .concept-explanation {
+            margin-top: 10px;
+            display: none;
+        }
+
+        .concept-explanation.show {
+            display: block;
+        }
+
+        .concept-explanation textarea {
+            min-height: 64px;
+            font-size: 0.92em;
+        }
+
+        .concept-title {
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            font-size: 0.98em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 18px rgba(102, 126, 234, 0.35);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .secondary-btn {
+            background: #6c757d;
+        }
+
+        .danger-btn {
+            background: #dc3545;
+        }
+
+        .danger-btn:hover {
+            box-shadow: 0 5px 18px rgba(220, 53, 69, 0.35);
+        }
+
+        .export-btn {
+            background: #28a745;
+        }
+
+        .copy-btn {
+            background: #17a2b8;
+        }
+
+        .print-btn {
+            background: #6f42c1;
+        }
+
+        .entries-section {
+            margin-top: 10px;
+            padding-top: 24px;
+            border-top: 2px solid #ddd;
+        }
+
+        .export-note {
+            background: #e8f5e9;
+            border-left: 4px solid #28a745;
+            padding: 12px 14px;
+            border-radius: 6px;
+            color: #1b5e20;
+            line-height: 1.35;
+            margin-bottom: 14px;
+        }
+
+        .entry-card {
+            background: #f8f9ff;
+            border-left: 4px solid #764ba2;
+            padding: 18px;
+            margin-bottom: 14px;
+            border-radius: 6px;
+            position: relative;
+        }
+
+        .entry-card h4 {
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+
+        .entry-card p {
+            color: #555;
+            margin: 6px 0;
+            line-height: 1.45;
+        }
+
+        .entry-card small {
+            color: #777;
+            font-style: italic;
+        }
+
+        .entry-source {
+            background: white;
+            padding: 9px;
+            border-radius: 4px;
+            border-left: 3px solid #28a745;
+            margin: 8px 0;
+            color: #333;
+            line-height: 1.4;
+        }
+
+        .concept-mapping {
+            background: white;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 4px;
+            border-left: 3px solid #667eea;
+        }
+
+        .concept-mapping strong {
+            color: #667eea;
+        }
+
+        .delete-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #ff6b6b;
+            padding: 5px 10px;
+            font-size: 0.8em;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #999;
+            padding: 30px;
+            font-style: italic;
+        }
+
+        .chart-preview-wrap {
+            overflow-x: auto;
+            margin-top: 16px;
+        }
+
+        .chart-preview {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9em;
+            min-width: 850px;
+        }
+
+        .chart-preview th {
+            background: #667eea;
+            color: white;
+            text-align: left;
+            padding: 9px;
+            vertical-align: top;
+        }
+
+        .chart-preview td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            vertical-align: top;
+            line-height: 1.35;
+        }
+
+        .chart-preview tr:nth-child(even) td {
+            background: #f8f9ff;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 AP European History Evidence Mapper</h1>
+            <p>Unit 1: Renaissance and Exploration (c. 1450–1648)</p>
+        </div>
+
+        <div class="top-strip">
+            <div class="student-box">
+                <h2>👤 Student Setup</h2>
+                <p class="small-note">Enter your name once. It will stay for every evidence entry until you reset for a new student.</p>
+                <div class="student-actions">
+                    <input type="text" id="studentName" placeholder="Student name" aria-label="Student name" style="flex: 1; min-width: 220px;">
+                    <button onclick="saveStudentName()">Save Name</button>
+                </div>
+                <p class="small-note" id="currentStudentDisplay">Current student: Not saved yet</p>
+            </div>
+            <div class="reset-box">
+                <h2>🔄 Reset Options</h2>
+                <p class="small-note">Use these when one entry is messy or when a student has exported and the next student needs a fresh page.</p>
+                <div class="reset-actions">
+                    <button class="secondary-btn" onclick="clearCurrentEntry()">Clear Current Entry Only</button>
+                    <button class="danger-btn" onclick="fullResetForNextStudent()">Full Reset for Next Student</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="section">
+                <h2>✍️ Add Evidence</h2>
+
+                <div>
+                    <label for="textbookExcerpt">Paste or type your evidence:</label>
+                    <textarea id="textbookExcerpt" placeholder="Paste textbook, primary source, online source, or outside source evidence here..."></textarea>
+                </div>
+
+                <div>
+                    <label>Source information</label>
+                    <div class="source-grid">
+                        <div>
+                            <select id="sourceType" aria-label="Source type">
+                                <option value="Textbook/Class Reading">Textbook/Class Reading</option>
+                                <option value="Primary Source">Primary Source</option>
+                                <option value="Academic Website">Academic Website</option>
+                                <option value="Museum/Archive/Library">Museum/Archive/Library</option>
+                                <option value="School Database">School Database</option>
+                                <option value="Other Outside Source">Other Outside Source</option>
+                            </select>
+                        </div>
+                        <div>
+                            <input type="text" id="sourceLocation" placeholder="Page #, section, chapter, or paragraph">
+                        </div>
+                        <div class="full-width">
+                            <input type="text" id="sourceTitle" placeholder="Source title / textbook title / website name">
+                        </div>
+                        <div class="full-width">
+                            <input type="url" id="sourceUrl" placeholder="URL if online source was used">
+                        </div>
+                    </div>
+                    <details class="source-help" style="margin-top: 10px;">
+                        <summary>Using an online source? Choose reliable academic sources.</summary>
+                        <ul>
+                            <li><strong>Best options:</strong> university pages, museum pages, archives, libraries, and government history collections.</li>
+                            <li><strong>Good examples:</strong> Library of Congress, National Archives, British Library, Fordham Internet History Sourcebooks, museum collections, JSTOR/Gale/EBSCO through school access, and university history departments.</li>
+                            <li><strong>Be careful with:</strong> random blogs, unsourced timelines, commercial homework sites, AI summaries, and pages with no author or citations.</li>
+                        </ul>
+                    </details>
+                </div>
+
+                <div>
+                    <label for="unitTopic">Which Unit 1 topic does this relate to?</label>
+                    <select id="unitTopic">
+                        <option value="">-- Select a topic --</option>
+                        <option value="renaissance">The Renaissance</option>
+                        <option value="exploration">Age of Exploration</option>
+                        <option value="economic">Economic & Social Development</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label>Select learning objectives and explain the connection:</label>
+                    <p class="small-note">Check each learning objective that applies, then explain how your evidence proves or illustrates it.</p>
+                    <div class="concepts-list" id="conceptsList">
+                        <p style="color: #999;">Select a topic above to see relevant learning objectives.</p>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button onclick="addEntry()">Save Entry</button>
+                    <button class="secondary-btn" onclick="clearCurrentEntry()">Clear Current Entry</button>
+                </div>
+                <div class="success-message" id="successMessage">✓ Entry saved successfully!</div>
+                <div class="error-message" id="errorMessage"></div>
+            </div>
+
+            <div class="section">
+                <h2>🎯 Unit 1 Learning Objectives</h2>
+
+                <div>
+                    <div class="concept-title">The Renaissance</div>
+                    <div class="concepts-list">
+                        <div class="concept-item"><span>✓ Explain how the revival of classical texts contributed to the development of the Renaissance.</span></div>
+                        <div class="concept-item"><span>✓ Analyze the impact of humanism on arts, literature, and education in Europe.</span></div>
+                        <div class="concept-item"><span>✓ Assess how the Renaissance impacted social and gender roles.</span></div>
+                        <div class="concept-item"><span>✓ Evaluate the methods used by monarchs to consolidate power during this period.</span></div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="concept-title">Age of Exploration</div>
+                    <div class="concepts-list">
+                        <div class="concept-item"><span>✓ Identify and explain causes of European exploration and expansion.</span></div>
+                        <div class="concept-item"><span>✓ Describe technological and navigational advances that facilitated overseas exploration.</span></div>
+                        <div class="concept-item"><span>✓ Analyze the impact of the Columbian Exchange on Europe, Africa, and the Americas.</span></div>
+                        <div class="concept-item"><span>✓ Compare the methods and motives of different European powers in their imperial ventures.</span></div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="concept-title">Economic & Social Development</div>
+                    <div class="concepts-list">
+                        <div class="concept-item"><span>✓ Evaluate the effects of Commercial and Agricultural Revolutions on European economy and society.</span></div>
+                        <div class="concept-item"><span>✓ Explain how changing economic practices contributed to the rise of capitalism and decline of feudalism.</span></div>
+                        <div class="concept-item"><span>✓ Analyze demographic changes and their impact on European society and urbanization.</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="section entries-section" style="grid-column: 1 / -1;">
+                <h2>📖 Saved Work + Export</h2>
+                <div class="export-note">
+                    Export creates a compact chart organized by learning objective. Students should export before switching devices or browsers, because saved work stays only on the current device/browser.
+                </div>
+                <div class="export-actions">
+                    <button class="export-btn" onclick="exportChartHTML()">🌐 Download Chart Report</button>
+                    <button class="export-btn" onclick="exportChartText()">📄 Download Text Chart</button>
+                    <button class="copy-btn" onclick="copyChartReport()">📋 Copy Chart</button>
+                    <button class="print-btn" onclick="printChartReport()">🖨️ Print / Save as PDF</button>
+                    <button class="danger-btn" onclick="fullResetForNextStudent()">Full Reset</button>
+                </div>
+                <div id="chartPreview" class="chart-preview-wrap"></div>
+                <div id="entriesList" class="empty-state">No entries yet. Add your first evidence mapping above!</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const STORAGE_KEY = 'apHistoryEntries';
+        const STUDENT_KEY = 'apHistoryStudentName';
+
+        const learningObjectives = {
+            renaissance: [
+                'Explain how the revival of classical texts contributed to the development of the Renaissance.',
+                'Analyze the impact of humanism on arts, literature, and education in Europe.',
+                'Assess how the Renaissance impacted social and gender roles.',
+                'Evaluate the methods used by monarchs to consolidate power during this period.'
+            ],
+            exploration: [
+                'Identify and explain causes of European exploration and expansion.',
+                'Describe technological and navigational advances that facilitated overseas exploration.',
+                'Analyze the impact of the Columbian Exchange on Europe, Africa, and the Americas.',
+                'Compare the methods and motives of different European powers in their imperial ventures.'
+            ],
+            economic: [
+                'Evaluate the effects of Commercial and Agricultural Revolutions on European economy and society.',
+                'Explain how changing economic practices contributed to the rise of capitalism and decline of feudalism.',
+                'Analyze demographic changes and their impact on European society and urbanization.'
+            ]
+        };
+
+        let entries = loadEntries();
+
+        function loadEntries() {
+            try {
+                return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+            } catch (error) {
+                return [];
+            }
+        }
+
+        function saveEntries() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+        }
+
+        function getStudentName() {
+            const typedName = document.getElementById('studentName').value.trim();
+            const savedName = localStorage.getItem(STUDENT_KEY) || '';
+            return typedName || savedName || entries[0]?.studentName || '';
+        }
+
+        function saveStudentName() {
+            const name = document.getElementById('studentName').value.trim();
+            if (!name) {
+                showError('⚠️ Type your name first, then click Save Name.');
+                return;
+            }
+            localStorage.setItem(STUDENT_KEY, name);
+            updateStudentDisplay();
+            showSuccess('✓ Name saved. You will not need to enter it again for each entry.');
+        }
+
+        function updateStudentDisplay() {
+            const savedName = localStorage.getItem(STUDENT_KEY) || entries[0]?.studentName || '';
+            const display = document.getElementById('currentStudentDisplay');
+            if (savedName) {
+                document.getElementById('studentName').value = savedName;
+                display.textContent = 'Current student: ' + savedName;
+            } else {
+                display.textContent = 'Current student: Not saved yet';
+            }
+        }
+
+        document.getElementById('studentName').addEventListener('blur', function() {
+            if (this.value.trim()) {
+                localStorage.setItem(STUDENT_KEY, this.value.trim());
+                updateStudentDisplay();
+            }
+        });
+
+        document.getElementById('unitTopic').addEventListener('change', function() {
+            const selected = this.value;
+            const conceptsList = document.getElementById('conceptsList');
+
+            if (!selected) {
+                conceptsList.innerHTML = '<p style="color: #999;">Select a topic above to see relevant learning objectives.</p>';
+                return;
+            }
+
+            const items = learningObjectives[selected];
+            conceptsList.innerHTML = items.map((objective, idx) => {
+                const checkboxId = 'objective_' + idx;
+                return `
+                    <div class="concept-item">
+                        <input type="checkbox" id="${checkboxId}" onchange="toggleExplanation('${checkboxId}')">
+                        <div class="concept-content">
+                            <label for="${checkboxId}">${escapeHTML(objective)}</label>
+                            <div class="concept-explanation" id="explanation_${checkboxId}">
+                                <textarea placeholder="Explain how your evidence connects to this learning objective..." data-objective="${escapeHTML(objective)}"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        });
+
+        function toggleExplanation(checkboxId) {
+            const checkbox = document.getElementById(checkboxId);
+            const explanation = document.getElementById('explanation_' + checkboxId);
+            if (checkbox.checked) {
+                explanation.classList.add('show');
+                explanation.querySelector('textarea').focus();
+            } else {
+                explanation.classList.remove('show');
+                explanation.querySelector('textarea').value = '';
+            }
+        }
+
+        function addEntry() {
+            const studentName = getStudentName();
+            const textbookExcerpt = document.getElementById('textbookExcerpt').value.trim();
+            const unitTopic = document.getElementById('unitTopic').value;
+            const sourceType = document.getElementById('sourceType').value;
+            const sourceTitle = document.getElementById('sourceTitle').value.trim();
+            const sourceLocation = document.getElementById('sourceLocation').value.trim();
+            const sourceUrl = document.getElementById('sourceUrl').value.trim();
+
+            if (!studentName) {
+                showError('⚠️ Please enter your name once in Student Setup before saving.');
+                return;
+            }
+
+            localStorage.setItem(STUDENT_KEY, studentName);
+            updateStudentDisplay();
+
+            if (!textbookExcerpt || !unitTopic) {
+                showError('⚠️ Please provide evidence and select a topic.');
+                return;
+            }
+
+            if (!sourceTitle && !sourceLocation && !sourceUrl) {
+                showError('⚠️ Please record at least one source detail: title, page/section, or URL.');
+                return;
+            }
+
+            const selectedMappings = [];
+            const checkedBoxes = Array.from(document.querySelectorAll('#conceptsList input[type="checkbox"]:checked'));
+
+            for (const cb of checkedBoxes) {
+                const objectiveLabel = cb.nextElementSibling.querySelector('label').textContent;
+                const explanation = cb.closest('.concept-item').querySelector('textarea').value.trim();
+
+                if (!explanation) {
+                    showError('⚠️ Please explain how your evidence connects to: "' + objectiveLabel + '"');
+                    return;
+                }
+
+                selectedMappings.push({
+                    concept: objectiveLabel,
+                    objective: objectiveLabel,
+                    explanation: explanation
+                });
+            }
+
+            if (selectedMappings.length === 0) {
+                showError('⚠️ Please select at least one learning objective and provide an explanation.');
+                return;
+            }
+
+            const entry = {
+                id: Date.now(),
+                studentName,
+                unitTopic,
+                sourceType,
+                sourceTitle,
+                sourceLocation,
+                sourceUrl,
+                textbookExcerpt,
+                conceptMappings: selectedMappings,
+                dateAdded: new Date().toLocaleDateString()
+            };
+
+            entries.push(entry);
+            saveEntries();
+            clearCurrentEntry();
+            showSuccess('✓ Entry saved. Add another entry or export your chart when finished.');
+            displayEntries();
+        }
+
+        function clearCurrentEntry() {
+            document.getElementById('textbookExcerpt').value = '';
+            document.getElementById('sourceType').value = 'Textbook/Class Reading';
+            document.getElementById('sourceTitle').value = '';
+            document.getElementById('sourceLocation').value = '';
+            document.getElementById('sourceUrl').value = '';
+            document.getElementById('unitTopic').value = '';
+            document.getElementById('conceptsList').innerHTML = '<p style="color: #999;">Select a topic above to see relevant learning objectives.</p>';
+        }
+
+        function fullResetForNextStudent() {
+            if (!confirm('This will clear the student name, all saved entries, and the current form. Make sure the work has been exported first. Continue?')) {
+                return;
+            }
+            entries = [];
+            localStorage.removeItem(STORAGE_KEY);
+            localStorage.removeItem(STUDENT_KEY);
+            document.getElementById('studentName').value = '';
+            clearCurrentEntry();
+            updateStudentDisplay();
+            displayEntries();
+            showSuccess('✓ Page reset. It is ready for the next student.');
+        }
+
+        function deleteEntry(id) {
+            if (confirm('Delete this saved entry?')) {
+                entries = entries.filter(e => e.id !== id);
+                saveEntries();
+                displayEntries();
+            }
+        }
+
+        function showSuccess(message) {
+            const successMessage = document.getElementById('successMessage');
+            successMessage.textContent = message;
+            successMessage.classList.add('show');
+            setTimeout(() => successMessage.classList.remove('show'), 3500);
+        }
+
+        function showError(message) {
+            const errorMessage = document.getElementById('errorMessage');
+            errorMessage.textContent = message;
+            errorMessage.classList.add('show');
+            setTimeout(() => errorMessage.classList.remove('show'), 5000);
+        }
+
+        function escapeHTML(text) {
+            return String(text ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/\"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        function escapeAttribute(text) {
+            return escapeHTML(text).replace(/`/g, '&#096;');
+        }
+
+        function formatTopic(topic) {
+            const topicLabels = {
+                renaissance: 'The Renaissance',
+                exploration: 'Age of Exploration',
+                economic: 'Economic & Social Development'
+            };
+            return topicLabels[topic] || topic || 'Topic not recorded';
+        }
+
+        function formatSource(entry) {
+            const type = entry.sourceType || 'Source';
+            const title = entry.sourceTitle || 'Title not recorded';
+            const location = entry.sourceLocation ? ' | ' + entry.sourceLocation : '';
+            const url = entry.sourceUrl ? ' | ' + entry.sourceUrl : '';
+            return type + ': ' + title + location + url;
+        }
+
+        function truncateText(text, maxLength) {
+            const clean = String(text || '').replace(/\s+/g, ' ').trim();
+            return clean.length > maxLength ? clean.substring(0, maxLength) + '...' : clean;
+        }
+
+        function getChartRows() {
+            const rows = [];
+            entries.forEach((entry, entryIndex) => {
+                const mappings = entry.conceptMappings || [];
+                mappings.forEach(mapping => {
+                    rows.push({
+                        entryNumber: entryIndex + 1,
+                        studentName: entry.studentName || getStudentName() || 'Student',
+                        topic: formatTopic(entry.unitTopic),
+                        learningObjective: mapping.objective || mapping.concept || 'Learning objective not recorded',
+                        source: formatSource(entry),
+                        evidence: entry.textbookExcerpt || '',
+                        explanation: mapping.explanation || '',
+                        dateAdded: entry.dateAdded || ''
+                    });
+                });
+            });
+            return rows.sort((a, b) => a.learningObjective.localeCompare(b.learningObjective) || a.entryNumber - b.entryNumber);
+        }
+
+        function displayEntries() {
+            const entriesList = document.getElementById('entriesList');
+            const chartPreview = document.getElementById('chartPreview');
+            const rows = getChartRows();
+
+            if (entries.length === 0) {
+                chartPreview.innerHTML = '';
+                entriesList.innerHTML = '<div class="empty-state">No entries yet. Add your first evidence mapping above!</div>';
+                return;
+            }
+
+            chartPreview.innerHTML = buildPreviewChart(rows);
+
+            entriesList.innerHTML = entries.map(entry => {
+                const safeExcerpt = escapeHTML(truncateText(entry.textbookExcerpt, 150));
+                return `
+                    <div class="entry-card">
+                        <button class="delete-btn" onclick="deleteEntry(${entry.id})">Delete</button>
+                        <h4>📝 Entry for ${escapeHTML(entry.studentName || 'Student')}</h4>
+                        <p><strong>Topic:</strong> ${escapeHTML(formatTopic(entry.unitTopic))}</p>
+                        <div class="entry-source"><strong>Source:</strong> ${escapeHTML(formatSource(entry))}</div>
+                        <p><strong>Evidence:</strong> <em>"${safeExcerpt}"</em></p>
+                        <div>
+                            <strong>Learning Objective Connections:</strong>
+                            ${(entry.conceptMappings || []).map(mapping => `
+                                <div class="concept-mapping">
+                                    <strong>• ${escapeHTML(mapping.objective || mapping.concept)}</strong>
+                                    <p style="margin-top: 6px; color: #555;">${escapeHTML(mapping.explanation)}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <small>Added: ${escapeHTML(entry.dateAdded)}</small>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function buildPreviewChart(rows) {
+            const previewRows = rows.map(row => `
+                <tr>
+                    <td>${escapeHTML(row.learningObjective)}</td>
+                    <td>${escapeHTML(row.topic)}</td>
+                    <td>${escapeHTML(row.source)}</td>
+                    <td>${escapeHTML(truncateText(row.evidence, 120))}</td>
+                    <td>${escapeHTML(truncateText(row.explanation, 120))}</td>
+                </tr>
+            `).join('');
+
+            return `
+                <h3 style="color:#667eea; margin: 10px 0;">Chart Preview: Organized by Learning Objective</h3>
+                <table class="chart-preview">
+                    <thead>
+                        <tr>
+                            <th>Learning Objective</th>
+                            <th>Topic</th>
+                            <th>Source / Page</th>
+                            <th>Evidence</th>
+                            <th>Explanation</th>
+                        </tr>
+                    </thead>
+                    <tbody>${previewRows}</tbody>
+                </table>
+            `;
+        }
+
+        function buildChartReportText() {
+            const rows = getChartRows();
+            const reportDate = new Date().toLocaleDateString();
+            const student = getStudentName() || rows[0]?.studentName || 'Student';
+            let report = '';
+            report += 'AP Euro Evidence Mapper — Learning Objective Chart\n';
+            report += 'Student: ' + student + ' | Export Date: ' + reportDate + ' | Rows: ' + rows.length + '\n';
+            report += 'Unit 1: Renaissance and Exploration (c. 1450–1648)\n\n';
+            report += 'Learning Objective\tTopic\tSource / Page\tEvidence\tExplanation\n';
+            rows.forEach(row => {
+                report += cleanForText(row.learningObjective) + '\t' +
+                          cleanForText(row.topic) + '\t' +
+                          cleanForText(row.source) + '\t' +
+                          cleanForText(row.evidence) + '\t' +
+                          cleanForText(row.explanation) + '\n';
+            });
+            return report;
+        }
+
+        function cleanForText(text) {
+            return String(text || '').replace(/\t/g, ' ').replace(/\r?\n/g, ' ').replace(/\s+/g, ' ').trim();
+        }
+
+        function buildChartReportHTML() {
+            const rows = getChartRows();
+            const reportDate = new Date().toLocaleDateString();
+            const student = getStudentName() || rows[0]?.studentName || 'Student';
+            const rowHTML = rows.map(row => `
+                <tr>
+                    <td>${escapeHTML(row.learningObjective)}</td>
+                    <td>${escapeHTML(row.topic)}</td>
+                    <td>${escapeHTML(row.source)}</td>
+                    <td>${escapeHTML(row.evidence).replace(/\n/g, '<br>')}</td>
+                    <td>${escapeHTML(row.explanation).replace(/\n/g, '<br>')}</td>
+                </tr>
+            `).join('');
+
+            return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AP Euro Evidence Mapper Learning Objective Chart</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 18px;
+            color: #222;
+            font-size: 10.5px;
+            line-height: 1.25;
+        }
+        header {
+            border-bottom: 2px solid #4f46e5;
+            padding-bottom: 6px;
+            margin-bottom: 10px;
+        }
+        h1 {
+            color: #4f46e5;
+            font-size: 18px;
+            margin: 0 0 4px 0;
+        }
+        p { margin: 3px 0; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+        th, td {
+            border: 1px solid #999;
+            padding: 5px;
+            vertical-align: top;
+            word-wrap: break-word;
+        }
+        th {
+            background: #e8eaff;
+            font-weight: bold;
+            text-align: left;
+        }
+        th:nth-child(1), td:nth-child(1) { width: 25%; }
+        th:nth-child(2), td:nth-child(2) { width: 10%; }
+        th:nth-child(3), td:nth-child(3) { width: 18%; }
+        th:nth-child(4), td:nth-child(4) { width: 22%; }
+        th:nth-child(5), td:nth-child(5) { width: 25%; }
+        tr { page-break-inside: avoid; }
+        @page { margin: 0.35in; }
+        @media print {
+            body { margin: 0; font-size: 9.5px; }
+            th, td { padding: 4px; }
+            header { margin-bottom: 8px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>AP Euro Evidence Mapper — Learning Objective Chart</h1>
+        <p><strong>Student:</strong> ${escapeHTML(student)} | <strong>Export Date:</strong> ${escapeHTML(reportDate)} | <strong>Rows:</strong> ${rows.length}</p>
+        <p><strong>Unit 1:</strong> Renaissance and Exploration (c. 1450–1648)</p>
+    </header>
+    <table>
+        <thead>
+            <tr>
+                <th>Learning Objective</th>
+                <th>Topic</th>
+                <th>Source / Page</th>
+                <th>Evidence</th>
+                <th>Explanation</th>
+            </tr>
+        </thead>
+        <tbody>${rowHTML}</tbody>
+    </table>
+</body>
+</html>`;
+        }
+
+        function safeFileName(name) {
+            return String(name || 'Student')
+                .replace(/[^a-z0-9]/gi, '-')
+                .replace(/-+/g, '-')
+                .replace(/^-|-$/g, '') || 'Student';
+        }
+
+        function downloadFile(content, filename, mimeType) {
+            const dataBlob = new Blob([content], { type: mimeType });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        function checkEntriesBeforeExport() {
+            if (entries.length === 0) {
+                alert('No entries to export. Add some evidence mappings first!');
+                return false;
+            }
+            return true;
+        }
+
+        function exportChartText() {
+            if (!checkEntriesBeforeExport()) return;
+            const student = safeFileName(getStudentName() || entries[0]?.studentName);
+            const date = new Date().toISOString().split('T')[0];
+            downloadFile(buildChartReportText(), `AP-Euro-LO-Chart-${student}-${date}.txt`, 'text/plain');
+        }
+
+        function exportChartHTML() {
+            if (!checkEntriesBeforeExport()) return;
+            const student = safeFileName(getStudentName() || entries[0]?.studentName);
+            const date = new Date().toISOString().split('T')[0];
+            downloadFile(buildChartReportHTML(), `AP-Euro-LO-Chart-${student}-${date}.html`, 'text/html');
+        }
+
+        function copyChartReport() {
+            if (!checkEntriesBeforeExport()) return;
+            const report = buildChartReportText();
+            navigator.clipboard.writeText(report).then(() => {
+                alert('Chart copied! Students can paste it into Canvas, Google Docs, or an email.');
+            }).catch(() => {
+                const textArea = document.createElement('textarea');
+                textArea.value = report;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                alert('Chart copied! Students can paste it into Canvas, Google Docs, or an email.');
+            });
+        }
+
+        function printChartReport() {
+            if (!checkEntriesBeforeExport()) return;
+            const reportWindow = window.open('', '_blank');
+            reportWindow.document.open();
+            reportWindow.document.write(buildChartReportHTML());
+            reportWindow.document.close();
+            reportWindow.focus();
+            setTimeout(() => reportWindow.print(), 300);
+        }
+
+        updateStudentDisplay();
+        displayEntries();
+    </script>
+</body>
+</html>
