@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AP European History - Unit 1 Learning Objectives Evidence Mapper</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .section h2 {
+            color: #667eea;
+            font-size: 1.5em;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-top: 15px;
+            color: #333;
+        }
+
+        textarea, select, input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        textarea:focus, select:focus, input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 8px rgba(102, 126, 234, 0.3);
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .concepts-list {
+            background: #f8f9ff;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #667eea;
+        }
+
+        .concept-item {
+            background: white;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 4px;
+            border-left: 4px solid #764ba2;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .concept-item input[type="checkbox"] {
+            width: auto;
+            margin: 5px 0 0 0;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .concept-content {
+            flex: 1;
+        }
+
+        .concept-item label {
+            margin: 0;
+            cursor: pointer;
+            font-weight: normal;
+        }
+
+        .concept-explanation {
+            margin-top: 10px;
+            display: none;
+        }
+
+        .concept-explanation.show {
+            display: block;
+        }
+
+        .concept-explanation textarea {
+            min-height: 60px;
+            font-size: 0.9em;
+        }
+
+        .concept-title {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 6px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .entries-section {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #ddd;
+        }
+
+        .entries-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .entry-card {
+            background: #f8f9ff;
+            border-left: 4px solid #764ba2;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            position: relative;
+        }
+
+        .entry-card h4 {
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+
+        .entry-card p {
+            color: #555;
+            margin: 8px 0;
+            line-height: 1.5;
+        }
+
+        .entry-card small {
+            color: #999;
+            font-style: italic;
+        }
+
+        .concept-mapping {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+            border-left: 3px solid #667eea;
+        }
+
+        .concept-mapping strong {
+            color: #667eea;
+        }
+
+        .delete-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #ff6b6b;
+            padding: 5px 10px;
+            font-size: 0.8em;
+        }
+
+        .delete-btn:hover {
+            background: #ff5252;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #999;
+            padding: 30px;
+            font-style: italic;
+        }
+
+        .export-btn {
+            background: #28a745;
+            margin-top: 20px;
+        }
+
+        .export-btn:hover {
+            box-shadow: 0 5px 20px rgba(40, 167, 69, 0.4);
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .reference-section {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 AP European History Evidence Mapper</h1>
+            <p>Unit 1: Renaissance and Exploration (c. 1450–1648)</p>
+        </div>
+
+        <div class="content">
+            <!-- Input Section -->
+            <div class="section">
+                <h2>✍️ Your Evidence</h2>
+
+                <div>
+                    <label for="studentName">Your Name (Optional)</label>
+                    <input type="text" id="studentName" placeholder="Enter your name">
+                </div>
+
+                <div>
+                    <label for="textbookExcerpt">Paste or type your textbook reading:</label>
+                    <textarea id="textbookExcerpt" placeholder="Paste textbook text here..."></textarea>
+                </div>
+
+                <div>
+                    <label for="unitTopic">Which Unit 1 topic does this relate to?</label>
+                    <select id="unitTopic">
+                        <option value="">-- Select a topic --</option>
+                        <option value="renaissance">The Renaissance</option>
+                        <option value="exploration">Age of Exploration</option>
+                        <option value="economic">Economic & Social Development</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label>Select concepts and explain the connection:</label>
+                    <p style="color: #666; font-size: 0.9em; margin-top: 5px;">Check each concept that applies, then explain how your evidence connects to it.</p>
+                    <div class="concepts-list" id="conceptsList">
+                        <p style="color: #999;">Select a topic above to see relevant concepts.</p>
+                    </div>
+                </div>
+
+                <button onclick="addEntry()">Save Entry</button>
+                <div class="success-message" id="successMessage">✓ Entry saved successfully!</div>
+                <div class="error-message" id="errorMessage"></div>
+            </div>
+
+            <!-- Concepts Reference Section -->
+            <div class="section">
+                <h2>🎯 Unit 1 Learning Objectives</h2>
+
+                <div>
+                    <div class="concept-title">The Renaissance</div>
+                    <div class="concepts-list">
+                        <div class="concept-item">
+                            <span>✓ Explain how the revival of classical texts contributed to the development of the Renaissance (humanism, secularism, art)</span>
+                        </div>
+                        <div class="concept-item">
+                            <span>✓ Analyze the impact of humanism on arts, literature, and education in Europe</span>
+                        </div>
+                        <div class="concept-item">
+                            <span>✓ Assess how the Renaissance impacted social and gender roles</span>
+                        </div>
+                        <div class="concept-item">
+                            <span>✓ Evaluate the methods used by monarchs to consolidate power during this period</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="concept-title">Age of Exploration</div>
+                    <div class="concepts-list">
+                        <div class="concept-item">
+                            <span>✓ Identify and explain causes of European exploration and expansion</span>
+                        </div>
+                        <div class="concept-item">
+                            <span>✓ Describe technological and navigational advances that facilitated overseas exploration</span>
+                        </div>
+                        <div class="concept-item">
+                            <span>✓ Analyze the impact of the Columbian Exchange on Europe, Africa, and the Americas</span>
+                        </div>
+                        <div class="concept-item">
+                            <span>✓ Compare the methods and motives of different European powers in their imperial ventures</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="concept-title">Economic & Social Development</div>
+                    <div class="concepts-list">
+                        <div class="concept-item">
+                            <span>✓ Evaluate the effects of Commercial and Agricultural Revolutions on European economy and society</span>
+                        </div>
+                        <div class="concept-item">
+                            <span>✓ Explain how changing economic practices contributed to the rise of capitalism and decline of feudalism</span>
+                        </div>
+                        <div class="concept-item">
+                            <span>✓ Analyze demographic changes and their impact on European society and urbanization</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Entries Section -->
+        <div class="content">
+            <div class="section entries-section" style="grid-column: 1 / -1;">
+                <h2>📖 Your Saved Entries</h2>
+                <button class="export-btn" onclick="exportEntries()">📥 Download as JSON</button>
+                <div id="entriesList" class="empty-state">No entries yet. Add your first evidence mapping above!</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const concepts = {
+            renaissance: [
+                'Classical texts & humanism revival',
+                'Secularism and individualism',
+                'Artistic advancements (perspective, anatomy)',
+                'Patronage of the arts',
+                'Changes in social hierarchy and gender roles',
+                'Rise of new monarchies'
+            ],
+            exploration: [
+                'Economic motives (spices, gold, trade routes)',
+                'Religious and political competition',
+                'Technological innovations (caravel, compass, astrolabe)',
+                'Major explorers (Columbus, da Gama, Magellan)',
+                'Columbian Exchange consequences',
+                'European colonial empires beginnings'
+            ],
+            economic: [
+                'Commercial revolution and capitalism growth',
+                'Banking and finance development',
+                'Agricultural innovations (enclosure movement)',
+                'Price revolution effects',
+                'Urbanization and city growth',
+                'Changes in rural and urban societies',
+                'Decline of feudalism'
+            ]
+        };
+
+        let entries = JSON.parse(localStorage.getItem('apHistoryEntries')) || [];
+
+        // Update concepts when topic is selected
+        document.getElementById('unitTopic').addEventListener('change', function() {
+            const selected = this.value;
+            const conceptsList = document.getElementById('conceptsList');
+
+            if (!selected) {
+                conceptsList.innerHTML = '<p style="color: #999;">Select a topic above to see relevant concepts.</p>';
+                return;
+            }
+
+            const items = concepts[selected];
+            conceptsList.innerHTML = items.map((concept, idx) => 
+                `<div class="concept-item">
+                    <input type="checkbox" id="concept_${idx}" onchange="toggleExplanation('concept_${idx}')">
+                    <div class="concept-content">
+                        <label for="concept_${idx}">${concept}</label>
+                        <div class="concept-explanation" id="explanation_concept_${idx}">
+                            <textarea placeholder="Explain how your evidence demonstrates this concept..." data-concept="${concept}"></textarea>
+                        </div>
+                    </div>
+                </div>`
+            ).join('');
+        });
+
+        function toggleExplanation(checkboxId) {
+            const checkbox = document.getElementById(checkboxId);
+            const explanationId = 'explanation_' + checkboxId;
+            const explanation = document.getElementById(explanationId);
+            
+            if (checkbox.checked) {
+                explanation.classList.add('show');
+                explanation.querySelector('textarea').focus();
+            } else {
+                explanation.classList.remove('show');
+                explanation.querySelector('textarea').value = '';
+            }
+        }
+
+        function addEntry() {
+            const studentName = document.getElementById('studentName').value || 'Anonymous';
+            const textbookExcerpt = document.getElementById('textbookExcerpt').value.trim();
+            const unitTopic = document.getElementById('unitTopic').value;
+            const errorMessage = document.getElementById('errorMessage');
+
+            if (!textbookExcerpt || !unitTopic) {
+                errorMessage.textContent = '⚠️ Please provide textbook evidence and select a topic.';
+                errorMessage.classList.add('show');
+                setTimeout(() => errorMessage.classList.remove('show'), 4000);
+                return;
+            }
+
+            // Get selected concepts with explanations
+            const selectedConceptsWithExplanations = [];
+            Array.from(document.querySelectorAll('#conceptsList input[type="checkbox"]:checked')).forEach(cb => {
+                const conceptLabel = cb.nextElementSibling.querySelector('label').textContent;
+                const explanation = cb.closest('.concept-item').querySelector('textarea').value.trim();
+                
+                if (!explanation) {
+                    errorMessage.textContent = `⚠️ Please explain how your evidence connects to "${conceptLabel}"`;
+                    errorMessage.classList.add('show');
+                    setTimeout(() => errorMessage.classList.remove('show'), 4000);
+                    throw new Error('Missing explanation');
+                }
+                
+                selectedConceptsWithExplanations.push({
+                    concept: conceptLabel,
+                    explanation: explanation
+                });
+            });
+
+            if (selectedConceptsWithExplanations.length === 0) {
+                errorMessage.textContent = '⚠️ Please select at least one concept and provide an explanation.';
+                errorMessage.classList.add('show');
+                setTimeout(() => errorMessage.classList.remove('show'), 4000);
+                return;
+            }
+
+            const entry = {
+                id: Date.now(),
+                studentName,
+                unitTopic,
+                textbookExcerpt,
+                conceptMappings: selectedConceptsWithExplanations,
+                dateAdded: new Date().toLocaleDateString()
+            };
+
+            entries.push(entry);
+            localStorage.setItem('apHistoryEntries', JSON.stringify(entries));
+
+            // Clear form
+            document.getElementById('studentName').value = '';
+            document.getElementById('textbookExcerpt').value = '';
+            document.getElementById('unitTopic').value = '';
+            document.getElementById('conceptsList').innerHTML = '<p style="color: #999;">Select a topic above to see relevant concepts.</p>';
+
+            // Show success message
+            const successMessage = document.getElementById('successMessage');
+            successMessage.classList.add('show');
+            setTimeout(() => successMessage.classList.remove('show'), 3000);
+
+            displayEntries();
+        }
+
+        function displayEntries() {
+            const entriesList = document.getElementById('entriesList');
+
+            if (entries.length === 0) {
+                entriesList.innerHTML = '<div class="empty-state">No entries yet. Add your first evidence mapping above!</div>';
+                return;
+            }
+
+            entriesList.innerHTML = entries.map(entry => `
+                <div class="entry-card">
+                    <button class="delete-btn" onclick="deleteEntry(${entry.id})">Delete</button>
+                    <h4>📝 ${entry.studentName}</h4>
+                    <p><strong>Topic:</strong> ${entry.unitTopic.charAt(0).toUpperCase() + entry.unitTopic.slice(1).replace(/([A-Z])/g, ' $1')}</p>
+                    <p><strong>Evidence:</strong> <em>"${entry.textbookExcerpt.substring(0, 120)}${entry.textbookExcerpt.length > 120 ? '...' : ''}"</em></p>
+                    
+                    <div>
+                        <strong>Concept Connections:</strong>
+                        ${entry.conceptMappings.map(mapping => `
+                            <div class="concept-mapping">
+                                <strong>• ${mapping.concept}</strong>
+                                <p style="margin-top: 8px; color: #555;">${mapping.explanation}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <small>Added: ${entry.dateAdded}</small>
+                </div>
+            `).join('');
+        }
+
+        function deleteEntry(id) {
+            if (confirm('Are you sure you want to delete this entry?')) {
+                entries = entries.filter(e => e.id !== id);
+                localStorage.setItem('apHistoryEntries', JSON.stringify(entries));
+                displayEntries();
+            }
+        }
+
+        function exportEntries() {
+            if (entries.length === 0) {
+                alert('No entries to export. Add some evidence mappings first!');
+                return;
+            }
+
+            const dataStr = JSON.stringify(entries, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `AP-History-Evidence-${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+        }
+
+        // Display entries on load
+        displayEntries();
+    </script>
+</body>
+</html>
