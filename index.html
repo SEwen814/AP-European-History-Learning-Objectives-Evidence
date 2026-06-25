@@ -1,1109 +1,1442 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AP European History Evidence Mapper</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-            overflow: hidden;
-        }
-
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 36px 20px;
-            text-align: center;
-        }
-
-        .header h1 {
-            font-size: 2.3em;
-            margin-bottom: 8px;
-        }
-
-        .header p {
-            font-size: 1.05em;
-            opacity: 0.92;
-        }
-
-        .top-strip {
-            padding: 22px 40px;
-            background: #f8f9ff;
-            border-bottom: 1px solid #e1e5ff;
-            display: grid;
-            grid-template-columns: 1.2fr 1fr;
-            gap: 20px;
-            align-items: end;
-        }
-
-        @media (max-width: 768px) {
-            .top-strip {
-                grid-template-columns: 1fr;
-                padding: 20px;
-            }
-        }
-
-        .student-box, .reset-box {
-            background: white;
-            border-radius: 10px;
-            border-left: 5px solid #667eea;
-            padding: 16px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
-
-        .student-box h2, .reset-box h2 {
-            color: #667eea;
-            font-size: 1.15em;
-            margin-bottom: 8px;
-        }
-
-        .student-actions, .reset-actions, .form-actions, .export-actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .small-note {
-            color: #666;
-            font-size: 0.9em;
-            margin: 6px 0 10px 0;
-            line-height: 1.35;
-        }
-
-        .content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            padding: 36px 40px;
-        }
-
-        @media (max-width: 768px) {
-            .content {
-                grid-template-columns: 1fr;
-                padding: 24px 20px;
-            }
-        }
-
-        .section {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .section h2 {
-            color: #667eea;
-            font-size: 1.5em;
-            border-bottom: 3px solid #667eea;
-            padding-bottom: 10px;
-        }
-
-        label {
-            display: block;
-            font-weight: 600;
-            margin-top: 12px;
-            color: #333;
-        }
-
-        textarea, select, input {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 6px;
-            font-family: inherit;
-            font-size: 1em;
-            transition: border-color 0.3s;
-        }
-
-        textarea:focus, select:focus, input:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 8px rgba(102, 126, 234, 0.3);
-        }
-
-        textarea {
-            min-height: 96px;
-            resize: vertical;
-        }
-
-        .source-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 8px;
-        }
-
-        .full-width {
-            grid-column: 1 / -1;
-        }
-
-        @media (max-width: 600px) {
-            .source-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .source-help {
-            background: #fff8e6;
-            border-left: 4px solid #f4b400;
-            border-radius: 6px;
-            padding: 12px 14px;
-            color: #4d3b00;
-            font-size: 0.92em;
-            line-height: 1.4;
-        }
-
-        .source-help summary {
-            cursor: pointer;
-            font-weight: 700;
-        }
-
-        .source-help ul {
-            margin: 8px 0 0 20px;
-        }
-
-        .concepts-list {
-            background: #f8f9ff;
-            padding: 15px;
-            border-radius: 6px;
-            border-left: 4px solid #667eea;
-        }
-
-        .concept-item {
-            background: white;
-            padding: 12px;
-            margin: 8px 0;
-            border-radius: 4px;
-            border-left: 4px solid #764ba2;
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-        }
-
-        .concept-item input[type="checkbox"] {
-            width: auto;
-            margin: 5px 0 0 0;
-            cursor: pointer;
-            flex-shrink: 0;
-        }
-
-        .concept-content {
-            flex: 1;
-        }
-
-        .concept-item label {
-            margin: 0;
-            cursor: pointer;
-            font-weight: normal;
-            line-height: 1.35;
-        }
-
-        .concept-explanation {
-            margin-top: 10px;
-            display: none;
-        }
-
-        .concept-explanation.show {
-            display: block;
-        }
-
-        .concept-explanation textarea {
-            min-height: 64px;
-            font-size: 0.92em;
-        }
-
-        .concept-title {
-            font-weight: 700;
-            color: #667eea;
-            margin-bottom: 8px;
-            font-size: 1.1em;
-        }
-
-        button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 6px;
-            font-size: 0.98em;
-            font-weight: 700;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        button:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 5px 18px rgba(102, 126, 234, 0.35);
-        }
-
-        button:active {
-            transform: translateY(0);
-        }
-
-        .secondary-btn {
-            background: #6c757d;
-        }
-
-        .danger-btn {
-            background: #dc3545;
-        }
-
-        .danger-btn:hover {
-            box-shadow: 0 5px 18px rgba(220, 53, 69, 0.35);
-        }
-
-        .export-btn {
-            background: #28a745;
-        }
-
-        .copy-btn {
-            background: #17a2b8;
-        }
-
-        .print-btn {
-            background: #6f42c1;
-        }
-
-        .entries-section {
-            margin-top: 10px;
-            padding-top: 24px;
-            border-top: 2px solid #ddd;
-        }
-
-        .export-note {
-            background: #e8f5e9;
-            border-left: 4px solid #28a745;
-            padding: 12px 14px;
-            border-radius: 6px;
-            color: #1b5e20;
-            line-height: 1.35;
-            margin-bottom: 14px;
-        }
-
-        .entry-card {
-            background: #f8f9ff;
-            border-left: 4px solid #764ba2;
-            padding: 18px;
-            margin-bottom: 14px;
-            border-radius: 6px;
-            position: relative;
-        }
-
-        .entry-card h4 {
-            color: #667eea;
-            margin-bottom: 8px;
-        }
-
-        .entry-card p {
-            color: #555;
-            margin: 6px 0;
-            line-height: 1.45;
-        }
-
-        .entry-card small {
-            color: #777;
-            font-style: italic;
-        }
-
-        .entry-source {
-            background: white;
-            padding: 9px;
-            border-radius: 4px;
-            border-left: 3px solid #28a745;
-            margin: 8px 0;
-            color: #333;
-            line-height: 1.4;
-        }
-
-        .concept-mapping {
-            background: white;
-            padding: 10px;
-            margin: 8px 0;
-            border-radius: 4px;
-            border-left: 3px solid #667eea;
-        }
-
-        .concept-mapping strong {
-            color: #667eea;
-        }
-
-        .delete-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: #ff6b6b;
-            padding: 5px 10px;
-            font-size: 0.8em;
-        }
-
-        .empty-state {
-            text-align: center;
-            color: #999;
-            padding: 30px;
-            font-style: italic;
-        }
-
-        .chart-preview-wrap {
-            overflow-x: auto;
-            margin-top: 16px;
-        }
-
-        .chart-preview {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.9em;
-            min-width: 850px;
-        }
-
-        .chart-preview th {
-            background: #667eea;
-            color: white;
-            text-align: left;
-            padding: 9px;
-            vertical-align: top;
-        }
-
-        .chart-preview td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            vertical-align: top;
-            line-height: 1.35;
-        }
-
-        .chart-preview tr:nth-child(even) td {
-            background: #f8f9ff;
-        }
-
-        .success-message {
-            background: #d4edda;
-            color: #155724;
-            padding: 12px;
-            border-radius: 6px;
-            margin-top: 10px;
-            display: none;
-        }
-
-        .success-message.show {
-            display: block;
-            animation: slideIn 0.3s ease-out;
-        }
-
-        .error-message {
-            background: #f8d7da;
-            color: #721c24;
-            padding: 12px;
-            border-radius: 6px;
-            margin-top: 10px;
-            display: none;
-        }
-
-        .error-message.show {
-            display: block;
-            animation: slideIn 0.3s ease-out;
-        }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AP European History Evidence Mapper</title>
+<style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+        color: #333;
+    }
+    .container {
+        max-width: 1220px;
+        margin: 0 auto;
+        background: #fff;
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: 0 10px 40px rgba(0,0,0,.25);
+    }
+    .header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        text-align: center;
+        padding: 34px 20px;
+    }
+    .header h1 { font-size: 2.35em; margin-bottom: 8px; }
+    .header p { opacity: .94; font-size: 1.08em; }
+    .notice {
+        background: #fff8df;
+        border-left: 5px solid #d6a500;
+        padding: 14px 18px;
+        margin: 0;
+        line-height: 1.4;
+    }
+    .top-strip {
+        display: grid;
+        grid-template-columns: 1.1fr 1fr 1fr;
+        gap: 16px;
+        background: #f8f9ff;
+        border-bottom: 1px solid #e1e5ff;
+        padding: 22px 34px;
+        align-items: start;
+    }
+    .box {
+        background: white;
+        border-left: 5px solid #667eea;
+        border-radius: 10px;
+        padding: 15px;
+        box-shadow: 0 2px 10px rgba(0,0,0,.05);
+    }
+    .box h2, .section h2 { color: #667eea; }
+    .box h2 { font-size: 1.12em; margin-bottom: 8px; }
+    .small-note { color: #666; font-size: .9em; line-height: 1.35; margin: 6px 0 10px; }
+    .content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+        padding: 34px;
+    }
+    .section { display: flex; flex-direction: column; gap: 18px; }
+    .section h2 {
+        font-size: 1.45em;
+        border-bottom: 3px solid #667eea;
+        padding-bottom: 9px;
+    }
+    label { display: block; font-weight: 650; margin: 13px 0 6px; }
+    input, select, textarea {
+        width: 100%;
+        padding: 11px 12px;
+        border: 2px solid #ddd;
+        border-radius: 7px;
+        font-family: inherit;
+        font-size: 1em;
+        background: #fff;
+    }
+    textarea { min-height: 92px; resize: vertical; }
+    input:focus, select:focus, textarea:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102,126,234,.15);
+    }
+    select:disabled, input:disabled, textarea:disabled { background: #f2f2f2; color: #777; }
+    button {
+        border: none;
+        border-radius: 7px;
+        padding: 11px 17px;
+        font-size: .96em;
+        font-weight: 700;
+        cursor: pointer;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        margin-top: 8px;
+    }
+    button:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(102,126,234,.25); }
+    .btn-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+    .green { background: #28a745; }
+    .gray { background: #6c757d; }
+    .red { background: #dc3545; }
+    .orange { background: #f08c00; }
+    .concepts-list {
+        background: #f8f9ff;
+        border-left: 4px solid #667eea;
+        border-radius: 7px;
+        padding: 14px;
+    }
+    .concept-item {
+        background: white;
+        border-left: 4px solid #764ba2;
+        border-radius: 6px;
+        padding: 12px;
+        margin: 8px 0;
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        line-height: 1.35;
+    }
+    .concept-item input[type="checkbox"] {
+        width: auto;
+        flex-shrink: 0;
+        margin-top: 4px;
+        transform: scale(1.1);
+        cursor: pointer;
+    }
+    .objective-content { flex: 1; }
+    .objective-label {
+        margin: 0;
+        font-weight: 600;
+        cursor: pointer;
+        line-height: 1.38;
+    }
+    .objective-explanation {
+        display: none;
+        margin-top: 10px;
+    }
+    .objective-explanation.show { display: block; }
+    .objective-explanation textarea {
+        min-height: 74px;
+        font-size: .96em;
+    }
+    .concept-title { color: #667eea; font-weight: 800; margin: 8px 0; font-size: 1.05em; }
+    .step-card {
+        border: 1px solid #e4e6f7;
+        border-radius: 9px;
+        padding: 13px;
+        background: #fbfbff;
+    }
+    .source-help {
+        background: #eef7ff;
+        border-left: 4px solid #2f80ed;
+        border-radius: 7px;
+        padding: 12px;
+        font-size: .92em;
+        line-height: 1.4;
+    }
+    .source-help ul { margin-left: 20px; margin-top: 7px; }
+    .success-message, .error-message {
+        padding: 12px;
+        border-radius: 7px;
+        margin-top: 8px;
+        display: none;
+        line-height: 1.35;
+    }
+    .success-message { background: #d4edda; color: #155724; }
+    .error-message { background: #f8d7da; color: #721c24; }
+    .show { display: block; }
+    .entries-section { grid-column: 1/-1; border-top: 2px solid #ddd; padding-top: 28px; }
+    .entry-card {
+        position: relative;
+        background: #f8f9ff;
+        border-left: 4px solid #764ba2;
+        border-radius: 7px;
+        padding: 16px;
+        margin: 13px 0;
+    }
+    .entry-card h4 { color: #667eea; margin-bottom: 7px; padding-right: 70px; }
+    .entry-card p { margin: 5px 0; line-height: 1.42; }
+    .delete-btn {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        background: #ff6b6b;
+        padding: 6px 10px;
+        font-size: .8em;
+        margin: 0;
+    }
+    .mapping-mini {
+        background: white;
+        border-left: 3px solid #667eea;
+        border-radius: 5px;
+        padding: 9px;
+        margin: 7px 0;
+    }
+    .empty-state {
+        color: #888;
+        font-style: italic;
+        text-align: center;
+        padding: 24px;
+        background: #fafafa;
+        border-radius: 8px;
+    }
+    .chart-preview {
+        overflow-x: auto;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        margin-top: 12px;
+    }
+    table { border-collapse: collapse; width: 100%; font-size: .9em; }
+    th { background: #667eea; color: white; text-align: left; padding: 8px; }
+    td { border-bottom: 1px solid #e6e6e6; padding: 8px; vertical-align: top; }
+    tr:nth-child(even) td { background: #fafaff; }
+    .lo-cell { min-width: 230px; font-weight: 650; color: #4f5fb8; }
+    .short-cell { min-width: 140px; }
+    .wide-cell { min-width: 260px; }
+    .disabled-note {
+        color: #7a5b00;
+        background: #fff8df;
+        border-left: 4px solid #d6a500;
+        border-radius: 7px;
+        padding: 12px;
+        line-height: 1.4;
+    }
+    @media (max-width: 900px) {
+        .top-strip, .content { grid-template-columns: 1fr; padding: 22px; }
+        .header h1 { font-size: 1.85em; }
+    }
+    @media print {
+        body { background: white; padding: 0; }
+        .top-strip, .section:not(.entries-section), .btn-row, .notice, .entry-card, #entriesList { display: none !important; }
+        .container { box-shadow: none; border-radius: 0; }
+        .header { background: white; color: black; padding: 10px; }
+        .content { padding: 0; display: block; }
+        th { background: #eee !important; color: black !important; }
+        table { font-size: 10pt; }
+    }
+</style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>📚 AP European History Evidence Mapper</h1>
-            <p>Unit 1: Renaissance and Exploration (c. 1450–1648)</p>
+<div class="container">
+    <div class="header">
+        <h1>📚 AP European History Evidence Mapper</h1>
+        <p id="unitSubtitle">Choose a unit to begin.</p>
+    </div>
+
+    <div class="top-strip">
+        <div class="box">
+            <h2>1. Choose Unit</h2>
+            <label for="unitSelect">AP Euro Unit</label>
+            <select id="unitSelect">
+                <option value="unit1">Unit 1: Renaissance and Exploration (c. 1450–1648)</option>
+                <option value="unit2">Unit 2: Age of Reformation (c. 1450–1648)</option>
+                <option value="unit3">Unit 3: Absolutism and Constitutionalism (c. 1648–1815)</option>
+                <option value="unit4">Unit 4: Scientific, Philosophical, and Political Developments (c. 1648–1815)</option>
+                <option value="unit5">Unit 5: Conflict, Crisis, and Reaction in the Late 18th Century (c. 1648–1815)</option>
+                <option value="unit6">Unit 6: Industrialization and Its Effects (c. 1815–1914)</option>
+                <option value="unit7">Unit 7: 19th-Century Perspectives and Political Developments (c. 1815–1914)</option>
+                <option value="unit8">Unit 8: 20th-Century Global Conflicts (c. 1914–present)</option>
+                <option value="unit9">Unit 9: Cold War and Contemporary Europe (c. 1914–present)</option>
+            </select>
+            <p class="small-note" id="unitStatus">Select a unit before entering evidence.</p>
         </div>
-
-        <div class="top-strip">
-            <div class="student-box">
-                <h2>👤 Student Setup</h2>
-                <p class="small-note">Enter your name once. It will stay for every evidence entry until you reset for a new student.</p>
-                <div class="student-actions">
-                    <input type="text" id="studentName" placeholder="Student name" aria-label="Student name" style="flex: 1; min-width: 220px;">
-                    <button onclick="saveStudentName()">Save Name</button>
-                </div>
-                <p class="small-note" id="currentStudentDisplay">Current student: Not saved yet</p>
-            </div>
-            <div class="reset-box">
-                <h2>🔄 Reset Options</h2>
-                <p class="small-note">Use these when one entry is messy or when a student has exported and the next student needs a fresh page.</p>
-                <div class="reset-actions">
-                    <button class="secondary-btn" onclick="clearCurrentEntry()">Clear Current Entry Only</button>
-                    <button class="danger-btn" onclick="fullResetForNextStudent()">Full Reset for Next Student</button>
-                </div>
-            </div>
+        <div class="box">
+            <h2>2. Student Setup</h2>
+            <label for="studentName">Student Name</label>
+            <input type="text" id="studentName" placeholder="Type name once">
+            <p class="small-note" id="currentStudentDisplay">Current student: Not saved yet</p>
+            <button onclick="saveStudentName()">Save Name</button>
         </div>
-
-        <div class="content">
-            <div class="section">
-                <h2>✍️ Add Evidence</h2>
-
-                <div>
-                    <label for="textbookExcerpt">Paste or type your evidence:</label>
-                    <textarea id="textbookExcerpt" placeholder="Paste textbook, primary source, online source, or outside source evidence here..."></textarea>
-                </div>
-
-                <div>
-                    <label>Source information</label>
-                    <div class="source-grid">
-                        <div>
-                            <select id="sourceType" aria-label="Source type">
-                                <option value="Textbook/Class Reading">Textbook/Class Reading</option>
-                                <option value="Primary Source">Primary Source</option>
-                                <option value="Academic Website">Academic Website</option>
-                                <option value="Museum/Archive/Library">Museum/Archive/Library</option>
-                                <option value="School Database">School Database</option>
-                                <option value="Other Outside Source">Other Outside Source</option>
-                            </select>
-                        </div>
-                        <div>
-                            <input type="text" id="sourceLocation" placeholder="Page #, section, chapter, or paragraph">
-                        </div>
-                        <div class="full-width">
-                            <input type="text" id="sourceTitle" placeholder="Source title / textbook title / website name">
-                        </div>
-                        <div class="full-width">
-                            <input type="url" id="sourceUrl" placeholder="URL if online source was used">
-                        </div>
-                    </div>
-                    <details class="source-help" style="margin-top: 10px;">
-                        <summary>Using an online source? Choose reliable academic sources.</summary>
-                        <ul>
-                            <li><strong>Best options:</strong> university pages, museum pages, archives, libraries, and government history collections.</li>
-                            <li><strong>Good examples:</strong> Library of Congress, National Archives, British Library, Fordham Internet History Sourcebooks, museum collections, JSTOR/Gale/EBSCO through school access, and university history departments.</li>
-                            <li><strong>Be careful with:</strong> random blogs, unsourced timelines, commercial homework sites, AI summaries, and pages with no author or citations.</li>
-                        </ul>
-                    </details>
-                </div>
-
-                <div>
-                    <label for="unitTopic">Which Unit 1 topic does this relate to?</label>
-                    <select id="unitTopic">
-                        <option value="">-- Select a topic --</option>
-                        <option value="renaissance">The Renaissance</option>
-                        <option value="exploration">Age of Exploration</option>
-                        <option value="economic">Economic & Social Development</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label>Select learning objectives and explain the connection:</label>
-                    <p class="small-note">Check each learning objective that applies, then explain how your evidence proves or illustrates it.</p>
-                    <div class="concepts-list" id="conceptsList">
-                        <p style="color: #999;">Select a topic above to see relevant learning objectives.</p>
-                    </div>
-                </div>
-
-                <div class="form-actions">
-                    <button onclick="addEntry()">Save Entry</button>
-                    <button class="secondary-btn" onclick="clearCurrentEntry()">Clear Current Entry</button>
-                </div>
-                <div class="success-message" id="successMessage">✓ Entry saved successfully!</div>
-                <div class="error-message" id="errorMessage"></div>
-            </div>
-
-            <div class="section">
-                <h2>🎯 Unit 1 Learning Objectives</h2>
-
-                <div>
-                    <div class="concept-title">The Renaissance</div>
-                    <div class="concepts-list">
-                        <div class="concept-item"><span>✓ Explain how the revival of classical texts contributed to the development of the Renaissance.</span></div>
-                        <div class="concept-item"><span>✓ Analyze the impact of humanism on arts, literature, and education in Europe.</span></div>
-                        <div class="concept-item"><span>✓ Assess how the Renaissance impacted social and gender roles.</span></div>
-                        <div class="concept-item"><span>✓ Evaluate the methods used by monarchs to consolidate power during this period.</span></div>
-                    </div>
-                </div>
-
-                <div>
-                    <div class="concept-title">Age of Exploration</div>
-                    <div class="concepts-list">
-                        <div class="concept-item"><span>✓ Identify and explain causes of European exploration and expansion.</span></div>
-                        <div class="concept-item"><span>✓ Describe technological and navigational advances that facilitated overseas exploration.</span></div>
-                        <div class="concept-item"><span>✓ Analyze the impact of the Columbian Exchange on Europe, Africa, and the Americas.</span></div>
-                        <div class="concept-item"><span>✓ Compare the methods and motives of different European powers in their imperial ventures.</span></div>
-                    </div>
-                </div>
-
-                <div>
-                    <div class="concept-title">Economic & Social Development</div>
-                    <div class="concepts-list">
-                        <div class="concept-item"><span>✓ Evaluate the effects of Commercial and Agricultural Revolutions on European economy and society.</span></div>
-                        <div class="concept-item"><span>✓ Explain how changing economic practices contributed to the rise of capitalism and decline of feudalism.</span></div>
-                        <div class="concept-item"><span>✓ Analyze demographic changes and their impact on European society and urbanization.</span></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="content">
-            <div class="section entries-section" style="grid-column: 1 / -1;">
-                <h2>📖 Saved Work + Export</h2>
-                <div class="export-note">
-                    Export creates a compact chart organized by learning objective. Students should export before switching devices or browsers, because saved work stays only on the current device/browser.
-                </div>
-                <div class="export-actions">
-                    <button class="export-btn" onclick="exportChartHTML()">🌐 Download Chart Report</button>
-                    <button class="export-btn" onclick="exportChartText()">📄 Download Text Chart</button>
-                    <button class="copy-btn" onclick="copyChartReport()">📋 Copy Chart</button>
-                    <button class="print-btn" onclick="printChartReport()">🖨️ Print / Save as PDF</button>
-                    <button class="danger-btn" onclick="fullResetForNextStudent()">Full Reset</button>
-                </div>
-                <div id="chartPreview" class="chart-preview-wrap"></div>
-                <div id="entriesList" class="empty-state">No entries yet. Add your first evidence mapping above!</div>
+        <div class="box">
+            <h2>Reset Options</h2>
+            <p class="small-note">Use after exporting, or when students need a clean screen.</p>
+            <div class="btn-row">
+                <button class="gray" onclick="clearCurrentEntryOnly()">Clear Current Entry</button>
+                <button class="orange" onclick="resetCurrentUnit()">Reset This Unit</button>
+                <button class="red" onclick="fullResetEverything()">Full Reset</button>
             </div>
         </div>
     </div>
 
-    <script>
-        const STORAGE_KEY = 'apHistoryEntries';
-        const STUDENT_KEY = 'apHistoryStudentName';
+    <div class="content">
+        <div class="section">
+            <h2>✍️ Add Evidence</h2>
 
-        const learningObjectives = {
-            renaissance: [
-                'Explain how the revival of classical texts contributed to the development of the Renaissance.',
-                'Analyze the impact of humanism on arts, literature, and education in Europe.',
-                'Assess how the Renaissance impacted social and gender roles.',
-                'Evaluate the methods used by monarchs to consolidate power during this period.'
-            ],
-            exploration: [
-                'Identify and explain causes of European exploration and expansion.',
-                'Describe technological and navigational advances that facilitated overseas exploration.',
-                'Analyze the impact of the Columbian Exchange on Europe, Africa, and the Americas.',
-                'Compare the methods and motives of different European powers in their imperial ventures.'
-            ],
-            economic: [
-                'Evaluate the effects of Commercial and Agricultural Revolutions on European economy and society.',
-                'Explain how changing economic practices contributed to the rise of capitalism and decline of feudalism.',
-                'Analyze demographic changes and their impact on European society and urbanization.'
-            ]
-        };
+            <div class="step-card">
+                <label>Step 1: Record the evidence and citation first</label>
+                <p class="small-note">Students should capture the evidence and where it came from before deciding which learning objectives it supports.</p>
 
-        let entries = loadEntries();
+                <label for="sourceType">Source Type</label>
+                <select id="sourceType">
+                    <option value="Textbook">Textbook</option>
+                    <option value="Primary Source">Primary Source</option>
+                    <option value="Academic Article / Database">Academic Article / Database</option>
+                    <option value="Museum / Archive / Library Website">Museum / Archive / Library Website</option>
+                    <option value="Other Online Source">Other Online Source</option>
+                    <option value="Other">Other</option>
+                </select>
 
-        function loadEntries() {
-            try {
-                return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-            } catch (error) {
-                return [];
+                <label for="sourceTitle">Source Title / Website / Textbook</label>
+                <input type="text" id="sourceTitle" placeholder="Example: Western Civilization textbook, National Archives, British Library">
+
+                <label for="sourceLocation">Page Number</label>
+                <input type="text" id="sourceLocation" placeholder="Example: p. 235">
+
+                <label for="sourceUrl">URL, if online</label>
+                <input type="url" id="sourceUrl" placeholder="https://...">
+
+                <div class="source-help">
+                    <strong>Reliable online source examples:</strong>
+                    <ul>
+                        <li>Library of Congress, National Archives, British Library, museum collections</li>
+                        <li>Fordham Internet History Sourcebooks, university history departments</li>
+                        <li>JSTOR, Gale, EBSCO, or other school-library databases</li>
+                        <li>Avoid random blogs, anonymous sites, and AI-generated summaries unless your teacher approves them.</li>
+                    </ul>
+                </div>
+
+                <label for="textbookExcerpt">Evidence</label>
+                <textarea id="textbookExcerpt" placeholder="Paste, quote, paraphrase, or summarize the evidence here..."></textarea>
+            </div>
+
+            <div class="step-card">
+                <label for="categorySelect">Step 2: Choose the category that best fits the evidence</label>
+                <select id="categorySelect">
+                    <option value="">-- Choose a unit first --</option>
+                </select>
+                <p class="small-note">This narrows the learning objectives so students are not staring at a giant list.</p>
+            </div>
+
+            <div class="step-card">
+                <label>Step 3: Check learning objectives and explain the connection</label>
+                <p class="small-note">Check each learning objective that applies. A writing box will appear under every objective students select.</p>
+                <div id="objectiveChecklist" class="concepts-list">
+                    <p style="color:#999;">Choose a category first.</p>
+                </div>
+            </div>
+            <div class="btn-row">
+                <button onclick="addEntry()">Save Entry</button>
+                <button class="gray" onclick="clearCurrentEntryOnly()">Clear Entry</button>
+            </div>
+            <div class="success-message" id="successMessage"></div>
+            <div class="error-message" id="errorMessage"></div>
+        </div>
+
+        <div class="section">
+            <h2>🎯 Learning Objectives Reference</h2>
+            <div id="referencePanel" class="concepts-list"><p style="color:#999;">Choose a unit to see its objectives.</p></div>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="section entries-section">
+            <h2>📖 Saved Work + Export</h2>
+            <p class="small-note">Export creates a concise chart organized by learning objective. Students should export before switching devices or browsers.</p>
+            <div class="btn-row">
+                <button class="green" onclick="exportChartHTML()">Download Chart Report</button>
+                <button class="green" onclick="exportChartText()">Download Text Chart</button>
+                <button onclick="copyChartReport()">Copy Chart</button>
+                <button class="gray" onclick="printChartReport()">Print / Save as PDF</button>
+                <button class="green" onclick="exportProgressBackup()">Download Progress Backup</button>
+                <button class="gray" onclick="triggerImportBackup()">Import Progress Backup</button>
+                <input type="file" id="backupImportFile" accept="application/json,.json" style="display:none" onchange="importProgressBackup(event)">
+            </div>
+            <div id="chartPreview" class="chart-preview"></div>
+            <div id="entriesList" class="empty-state">No entries yet.</div>
+        </div>
+    </div>
+</div>
+
+<script>
+const UNITS = {
+    "unit1": {
+        "label": "Unit 1: Renaissance and Exploration (c. 1450–1648)",
+        "active": true,
+        "topics": {
+            "contextualizingRenaissanceDiscovery": {
+                "label": "Contextualizing Renaissance and Discovery",
+                "objectives": [
+                    "Explain the context in which the Renaissance and Age of Discovery developed."
+                ]
+            },
+            "italianRenaissance": {
+                "label": "Italian Renaissance",
+                "objectives": [
+                    "Explain how the revival of classical texts contributed to the development of the Renaissance in Italy.",
+                    "Explain the political, intellectual, and cultural effects of the Italian Renaissance."
+                ]
+            },
+            "northernRenaissance": {
+                "label": "Northern Renaissance",
+                "objectives": [
+                    "Explain how Renaissance ideas were developed, maintained, and changed as the Renaissance spread to northern Europe."
+                ]
+            },
+            "printing": {
+                "label": "Printing",
+                "objectives": [
+                    "Explain the influence of the printing press on cultural and intellectual developments in modern European history."
+                ]
+            },
+            "newMonarchies": {
+                "label": "New Monarchies",
+                "objectives": [
+                    "Explain the causes and effects of the development of political institutions from 1450 to 1648."
+                ]
+            },
+            "technologicalAdvancesAgeExploration": {
+                "label": "Technological Advances and the Age of Exploration",
+                "objectives": [
+                    "Explain the technological factors that facilitated European exploration and expansion from 1450 to 1648.",
+                    "Explain the motivations for and effects of European exploration and expansion from 1450 to 1648."
+                ]
+            },
+            "rivalsWorldStage": {
+                "label": "Rivals on the World Stage",
+                "objectives": [
+                    "Explain how and why trading networks and colonial expansion affected relations between and among European states."
+                ]
+            },
+            "colonialExpansionColumbianExchange": {
+                "label": "Colonial Expansion and Columbian Exchange",
+                "objectives": [
+                    "Explain the economic impact of European colonial expansion and development of trade networks.",
+                    "Explain the social and cultural impact of European colonial expansion and development of trade networks."
+                ]
+            },
+            "slaveTrade": {
+                "label": "The Slave Trade",
+                "objectives": [
+                    "Explain the causes for and the development of the slave trade."
+                ]
+            },
+            "commercialRevolution": {
+                "label": "The Commercial Revolution",
+                "objectives": [
+                    "Explain European commercial and agricultural developments and their economic effects from 1450 to 1648.",
+                    "Explain European commercial and agricultural developments and their social effects from 1450 to 1648."
+                ]
+            },
+            "causationRenaissanceDiscovery": {
+                "label": "Causation in the Renaissance and Age of Discovery",
+                "objectives": [
+                    "Explain the causes and consequences of the Renaissance and Age of Discovery."
+                ]
             }
         }
-
-        function saveEntries() {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
-        }
-
-        function getStudentName() {
-            const typedName = document.getElementById('studentName').value.trim();
-            const savedName = localStorage.getItem(STUDENT_KEY) || '';
-            return typedName || savedName || entries[0]?.studentName || '';
-        }
-
-        function saveStudentName() {
-            const name = document.getElementById('studentName').value.trim();
-            if (!name) {
-                showError('⚠️ Type your name first, then click Save Name.');
-                return;
+    },
+    "unit2": {
+        "label": "Unit 2: Age of Reformation (c. 1450–1648)",
+        "active": true,
+        "topics": {
+            "contextualizingChallengesDevelopments": {
+                "label": "Contextualizing 16th- and 17th-Century Challenges and Developments",
+                "objectives": [
+                    "Explain the context in which the religious, political, and cultural developments of the 16th and 17th centuries took place."
+                ]
+            },
+            "lutherProtestantReformation": {
+                "label": "Luther and the Protestant Reformation",
+                "objectives": [
+                    "Explain how and why religious belief and practices changed from 1450 to 1648."
+                ]
+            },
+            "protestantReformContinues": {
+                "label": "Protestant Reform Continues",
+                "objectives": [
+                    "Explain how and why religious belief and practices changed from 1450 to 1648."
+                ]
+            },
+            "warsOfReligion": {
+                "label": "Wars of Religion",
+                "objectives": [
+                    "Explain how matters of religion influenced and were influenced by political factors from 1450 to 1648."
+                ]
+            },
+            "catholicReformation": {
+                "label": "The Catholic Reformation",
+                "objectives": [
+                    "Explain the continuities and changes in the role of the Catholic Church from 1450 to 1648."
+                ]
+            },
+            "societyPolitics16thCentury": {
+                "label": "16th-Century Society and Politics",
+                "objectives": [
+                    "Explain how economic and intellectual developments from 1450 to 1648 affected social norms and hierarchies."
+                ]
+            },
+            "mannerismBaroqueArt": {
+                "label": "Art of the 16th Century: Mannerism and Baroque Art",
+                "objectives": [
+                    "Explain how and why artistic expression changed from 1450 to 1648."
+                ]
+            },
+            "causationReformationWarsReligion": {
+                "label": "Causation in the Age of Reformation and the Wars of Religion",
+                "objectives": [
+                    "Explain how the religious, political, and cultural developments of the 16th and 17th centuries affected European society from 1450 to 1648."
+                ]
             }
-            localStorage.setItem(STUDENT_KEY, name);
-            updateStudentDisplay();
-            showSuccess('✓ Name saved. You will not need to enter it again for each entry.');
         }
-
-        function updateStudentDisplay() {
-            const savedName = localStorage.getItem(STUDENT_KEY) || entries[0]?.studentName || '';
-            const display = document.getElementById('currentStudentDisplay');
-            if (savedName) {
-                document.getElementById('studentName').value = savedName;
-                display.textContent = 'Current student: ' + savedName;
-            } else {
-                display.textContent = 'Current student: Not saved yet';
+    },
+    "unit3": {
+        "label": "Unit 3: Absolutism and Constitutionalism (c. 1648–1815)",
+        "active": true,
+        "topics": {
+            "contextualizingStateBuilding": {
+                "label": "Contextualizing State Building",
+                "objectives": [
+                    "Explain the context in which different forms of political power developed from 1648 to 1815."
+                ]
+            },
+            "englishCivilWarGloriousRevolution": {
+                "label": "The English Civil War and the Glorious Revolution",
+                "objectives": [
+                    "Explain the causes and consequences of the English Civil War."
+                ]
+            },
+            "economicPracticeDevelopment": {
+                "label": "Continuities and Changes to Economic Practice and Development",
+                "objectives": [
+                    "Explain the continuities and changes in commercial and economic developments from 1648 to 1815."
+                ]
+            },
+            "economicDevelopmentMercantilism": {
+                "label": "Economic Development and Mercantilism",
+                "objectives": [
+                    "Explain the continuities and changes in commercial and economic developments from 1648 to 1815."
+                ]
+            },
+            "dutchGoldenAge": {
+                "label": "The Dutch Golden Age",
+                "objectives": [
+                    "Explain the factors that contributed to the development of the Dutch Republic."
+                ]
+            },
+            "balanceOfPower": {
+                "label": "Balance of Power",
+                "objectives": [
+                    "Explain how European states attempted to establish and maintain a balance of power on the continent throughout the period from 1648 to 1815.",
+                    "Explain how advances in technology contributed to a developing balance of power on the continent throughout the period from 1648 to 1815."
+                ]
+            },
+            "absolutistApproachesPower": {
+                "label": "Absolutist Approaches to Power",
+                "objectives": [
+                    "Explain how absolutist forms of rule affected social and political development from 1648 to 1815."
+                ]
+            },
+            "comparisonAbsolutismConstitutionalism": {
+                "label": "Comparison in the Age of Absolutism and Constitutionalism",
+                "objectives": [
+                    "Compare the different forms of political power that developed in Europe from 1648 to 1815."
+                ]
             }
         }
-
-        document.getElementById('studentName').addEventListener('blur', function() {
-            if (this.value.trim()) {
-                localStorage.setItem(STUDENT_KEY, this.value.trim());
-                updateStudentDisplay();
+    },
+    "unit4": {
+        "label": "Unit 4: Scientific, Philosophical, and Political Developments (c. 1648–1815)",
+        "active": true,
+        "topics": {
+            "contextualizingScientificRevolutionEnlightenment": {
+                "label": "Contextualizing the Scientific Revolution and the Enlightenment",
+                "objectives": [
+                    "Explain the context in which the Scientific Revolution and Enlightenment developed in Europe."
+                ]
+            },
+            "scientificRevolution": {
+                "label": "The Scientific Revolution",
+                "objectives": [
+                    "Explain how understanding of the natural world developed and changed during the Scientific Revolution and Enlightenment."
+                ]
+            },
+            "enlightenment": {
+                "label": "The Enlightenment",
+                "objectives": [
+                    "Explain the causes and consequences of Enlightenment thought on European society from 1648 to 1815.",
+                    "Explain the influence of Enlightenment thought on European intellectual development from 1648 to 1815."
+                ]
+            },
+            "societyDemographics18thCentury": {
+                "label": "18th-Century Society and Demographics",
+                "objectives": [
+                    "Explain the factors contributing to and the consequences of demographic changes from 1648 to 1815."
+                ]
+            },
+            "cultureArts18thCentury": {
+                "label": "18th-Century Culture and Arts",
+                "objectives": [
+                    "Explain how European cultural and intellectual life was maintained and changed throughout the period from 1648 to 1815."
+                ]
+            },
+            "enlightenedApproachesPower": {
+                "label": "Enlightened and Other Approaches to Power",
+                "objectives": [
+                    "Explain how different forms of political power were influenced by Enlightenment thought from 1648 to 1815.",
+                    "Explain how and why political and religious developments challenged or reinforced the idea of a unified Europe from 1648 to 1815."
+                ]
+            },
+            "causationScientificRevolutionEnlightenment": {
+                "label": "Causation in the Age of the Scientific Revolution and the Enlightenment",
+                "objectives": [
+                    "Explain how and why the Scientific Revolution and Enlightenment challenged the existing European order and understanding of the world."
+                ]
             }
+        }
+    },
+    "unit5": {
+        "label": "Unit 5: Conflict, Crisis, and Reaction in the Late 18th Century (c. 1648–1815)",
+        "active": true,
+        "topics": {
+            "contextualizing18thCenturyStates": {
+                "label": "Contextualizing 18th-Century States",
+                "objectives": [
+                    "Explain the context in which the European states experienced crisis and conflict from 1648 to 1815."
+                ]
+            },
+            "riseGlobalMarkets": {
+                "label": "The Rise of Global Markets",
+                "objectives": [
+                    "Explain the causes and consequences of European maritime competition from 1648 to 1815."
+                ]
+            },
+            "britainsAscendency": {
+                "label": "Britain’s Ascendency",
+                "objectives": [
+                    "Explain the economic and political consequences of the rivalry between Britain and France from 1648 to 1815."
+                ]
+            },
+            "frenchRevolution": {
+                "label": "The French Revolution",
+                "objectives": [
+                    "Explain the causes, events, and consequences of the French Revolution."
+                ]
+            },
+            "frenchRevolutionEffects": {
+                "label": "The French Revolution’s Effects",
+                "objectives": [
+                    "Explain how the events and developments of the French Revolution influenced political and social ideas from 1648 to 1815."
+                ]
+            },
+            "napoleonRiseDominanceDefeat": {
+                "label": "Napoleon’s Rise, Dominance, and Defeat",
+                "objectives": [
+                    "Explain the effects of Napoleon’s rule on European social, economic, and political life.",
+                    "Explain the nationalist responses to Napoleon’s rule in Europe."
+                ]
+            },
+            "congressVienna": {
+                "label": "The Congress of Vienna",
+                "objectives": [
+                    "Explain how states responded to Napoleonic rule in Europe and the consequences of the response."
+                ]
+            },
+            "romanticism": {
+                "label": "Romanticism",
+                "objectives": [
+                    "Explain how and why the Romantic Movement and religious revival challenged Enlightenment thought from 1648 to 1815."
+                ]
+            },
+            "continuityChange18thCenturyStates": {
+                "label": "Continuity and Change in 18th-Century States",
+                "objectives": [
+                    "Explain how the developments and challenges to the political order resulted in change in the period from 1648 to 1815."
+                ]
+            }
+        }
+    },
+    "unit6": {
+        "label": "Unit 6: Industrialization and Its Effects (c. 1815–1914)",
+        "active": true,
+        "topics": {
+            "contextualizingIndustrializationOriginsEffects": {
+                "label": "Contextualizing Industrialization and Its Origins and Effects",
+                "objectives": [
+                    "Explain the context in which industrialization originated, developed, and spread in Europe."
+                ]
+            },
+            "spreadIndustryEurope": {
+                "label": "The Spread of Industry Throughout Europe",
+                "objectives": [
+                    "Explain the factors that influenced the development of industrialization in Europe from 1815 to 1914."
+                ]
+            },
+            "secondWaveIndustrializationEffects": {
+                "label": "Second Wave Industrialization and Its Effects",
+                "objectives": [
+                    "Explain how innovations and advances in technology during the Industrial Revolutions led to economic and social change.",
+                    "Explain how industrialization influenced economic and political development throughout the period from 1815 to 1914."
+                ]
+            },
+            "socialEffectsIndustrialization": {
+                "label": "Social Effects of Industrialization",
+                "objectives": [
+                    "Explain the causes and consequences of social developments resulting from industrialization."
+                ]
+            },
+            "concertEuropeConservatism": {
+                "label": "The Concert of Europe and European Conservatism",
+                "objectives": [
+                    "Explain how the European political order was maintained and challenged from 1815 to 1914."
+                ]
+            },
+            "reactionsRevolutions": {
+                "label": "Reactions and Revolutions",
+                "objectives": [
+                    "Explain how and why various groups reacted against the existing order from 1815 to 1914."
+                ]
+            },
+            "ideologiesChangeReform": {
+                "label": "Ideologies of Change and Reform Movements",
+                "objectives": [
+                    "Explain how and why different intellectual developments challenged the political and social order from 1815 to 1914."
+                ]
+            },
+            "institutionalResponsesReform": {
+                "label": "Institutional Responses and Reform",
+                "objectives": [
+                    "Explain how and why governments and other institutions responded to challenges resulting from industrialization."
+                ]
+            },
+            "causationIndustrialization": {
+                "label": "Causation in the Age of Industrialization",
+                "objectives": [
+                    "Explain the influence of innovations and technological developments in Europe from 1815 to 1914."
+                ]
+            }
+        }
+    },
+    "unit7": {
+        "label": "Unit 7: 19th-Century Perspectives and Political Developments (c. 1815–1914)",
+        "active": true,
+        "topics": {
+            "nationalism": {
+                "label": "Nationalism",
+                "objectives": [
+                    "Explain how the development and spread of nationalism affected Europe from 1815 to 1914."
+                ]
+            },
+            "nationalUnificationDiplomaticTensions": {
+                "label": "National Unification and Diplomatic Tensions",
+                "objectives": [
+                    "Explain the factors that resulted in Italian unification and German unification.",
+                    "Explain how nationalist sentiment and political alliances led to tension between and among European powers from 1815 to 1914."
+                ]
+            },
+            "darwinismSocialDarwinism": {
+                "label": "Darwinism, Social Darwinism",
+                "objectives": [
+                    "Explain how Darwin’s theories influenced scientific and social developments from 1815 to 1914."
+                ]
+            },
+            "ageProgressModernity": {
+                "label": "The Age of Progress and Modernity",
+                "objectives": [
+                    "Explain how science and other intellectual disciplines developed and changed throughout the period from 1815 to 1914."
+                ]
+            },
+            "newImperialismMotivationsMethods": {
+                "label": "New Imperialism: Motivations and Methods",
+                "objectives": [
+                    "Explain the motivations that led to European imperialism in the period from 1815 to 1914."
+                ]
+            },
+            "imperialismGlobalEffects": {
+                "label": "Imperialism’s Global Effects",
+                "objectives": [
+                    "Explain how European imperialism affected both European and non-European societies."
+                ]
+            },
+            "cultureArts19thCentury": {
+                "label": "19th-Century Culture and Arts",
+                "objectives": [
+                    "Explain the continuities and changes in European artistic expression from 1815 to 1914."
+                ]
+            },
+            "causation19thCenturyPerspectives": {
+                "label": "Causation in 19th-Century Perspectives and Political Developments",
+                "objectives": [
+                    "Explain the influence of nationalist and imperialist movements on European and global stability."
+                ]
+            }
+        }
+    },
+    "unit8": {
+        "label": "Unit 8: 20th-Century Global Conflicts (c. 1914–present)",
+        "active": true,
+        "topics": {
+            "contextualizing20thCenturyGlobalConflicts": {
+                "label": "Contextualizing 20th-Century Global Conflicts",
+                "objectives": [
+                    "Explain the context in which global conflict developed in the 20th century."
+                ]
+            },
+            "worldWarI": {
+                "label": "World War I",
+                "objectives": [
+                    "Explain the causes and effects of World War I.",
+                    "Explain how new technology altered the conduct of World War I.",
+                    "Explain how the developments of World War I changed political and diplomatic interactions between and among nations."
+                ]
+            },
+            "russianRevolutionEffects": {
+                "label": "The Russian Revolution and Its Effects",
+                "objectives": [
+                    "Explain the causes and effects of the Russian Revolution."
+                ]
+            },
+            "versaillesPeaceSettlement": {
+                "label": "Versailles Conference and Peace Settlement",
+                "objectives": [
+                    "Explain how and why the settlement of World War I failed to effectively resolve the political, economic, and diplomatic challenges of the early 20th century."
+                ]
+            },
+            "globalEconomicCrisis": {
+                "label": "Global Economic Crisis",
+                "objectives": [
+                    "Explain the causes and effects of the global economic crisis in the 1920s and 1930s."
+                ]
+            },
+            "fascismTotalitarianism": {
+                "label": "Fascism and Totalitarianism",
+                "objectives": [
+                    "Explain the factors that led to the development of fascist and totalitarian regimes in the aftermath of World War I.",
+                    "Explain the consequences of Stalin’s economic policies and totalitarian rule in the Soviet Union."
+                ]
+            },
+            "europeInterwarPeriod": {
+                "label": "Europe During the Interwar Period",
+                "objectives": [
+                    "Explain how and why various political and ideological factors resulted in the catastrophe of World War II."
+                ]
+            },
+            "worldWarII": {
+                "label": "World War II",
+                "objectives": [
+                    "Explain how technology and innovation affected the course of World War II and the 20th century."
+                ]
+            },
+            "holocaust": {
+                "label": "The Holocaust",
+                "objectives": [
+                    "Explain how and why cultural and national identities were affected by war and the rise of fascist/totalitarian powers in the period from 1914 to the present."
+                ]
+            },
+            "culturalIntellectualArtistic20thCentury": {
+                "label": "20th-Century Cultural, Intellectual, and Artistic Developments",
+                "objectives": [
+                    "Explain how the events of the first half of the 20th century challenged existing social, cultural, and intellectual understandings."
+                ]
+            },
+            "continuityChangeGlobalConflict": {
+                "label": "Continuity and Changes in an Age of Global Conflict",
+                "objectives": [
+                    "Explain how economic challenges and ideological beliefs influenced prior conceptions about the relationship between the individual and the state."
+                ]
+            }
+        }
+    },
+    "unit9": {
+        "label": "Unit 9: Cold War and Contemporary Europe (c. 1914–present)",
+        "active": true,
+        "topics": {
+            "contextualizingColdWarContemporaryEurope": {
+                "label": "Contextualizing Cold War and Contemporary Europe",
+                "objectives": [
+                    "Explain the context in which the Cold War developed, spread, and ended in Europe."
+                ]
+            },
+            "rebuildingEurope": {
+                "label": "Rebuilding Europe",
+                "objectives": [
+                    "Explain how economic developments resulted in economic, political, and cultural change in the period after World War II."
+                ]
+            },
+            "coldWar": {
+                "label": "The Cold War",
+                "objectives": [
+                    "Explain the causes, events, and effects of the Cold War in the period following World War II."
+                ]
+            },
+            "twoSuperPowersEmerge": {
+                "label": "Two Super Powers Emerge",
+                "objectives": [
+                    "Explain the economic and political consequences of the Cold War for Europe."
+                ]
+            },
+            "postwarNationalismEthnicConflictAtrocities": {
+                "label": "Postwar Nationalism, Ethnic Conflict, and Atrocities",
+                "objectives": [
+                    "Explain the causes and effects of mass atrocities in the period following World War II to the present."
+                ]
+            },
+            "contemporaryWesternDemocracies": {
+                "label": "Contemporary Western Democracies",
+                "objectives": [
+                    "Explain state-based economic developments following World War II and the responses to these developments."
+                ]
+            },
+            "fallOfCommunism": {
+                "label": "The Fall of Communism",
+                "objectives": [
+                    "Explain the causes and effects of the end of the Cold War."
+                ]
+            },
+            "twentiethCenturyFeminism": {
+                "label": "20th-Century Feminism",
+                "objectives": [
+                    "Explain how women’s roles and status developed and changed throughout the 20th and 21st centuries."
+                ]
+            },
+            "decolonization": {
+                "label": "Decolonization",
+                "objectives": [
+                    "Explain the various ways in which colonial groups around the world sought independence from colonizers in the 20th and 21st centuries."
+                ]
+            },
+            "europeanUnion": {
+                "label": "The European Union",
+                "objectives": [
+                    "Explain how the formation and existence of the European Union influenced economic developments throughout the period following World War II to the present.",
+                    "Explain how the European Union affected national and European identity throughout the period following World War II to the present."
+                ]
+            },
+            "migrationImmigration": {
+                "label": "Migration and Immigration",
+                "objectives": [
+                    "Explain the causes and effects of changes to migration within and immigration to Europe throughout the period following World War II to the present."
+                ]
+            },
+            "technology": {
+                "label": "Technology",
+                "objectives": [
+                    "Explain how innovation and advances in technology influenced cultural and intellectual developments in the period 1914 to the present."
+                ]
+            },
+            "globalization": {
+                "label": "Globalization",
+                "objectives": [
+                    "Explain the technological and cultural causes and consequences of increasing European globalization in the period from 1914 to the present."
+                ]
+            },
+            "cultureArtsDemographics20th21st": {
+                "label": "20th- and 21st-Century Culture, Arts, and Demographic Trends",
+                "objectives": [
+                    "Explain how and why European culture changed from the period following World War II to the present."
+                ]
+            },
+            "continuityChange20th21st": {
+                "label": "Continuity and Change in the 20th and 21st Centuries",
+                "objectives": [
+                    "Explain how the challenges of the 20th century influenced what it means to be European."
+                ]
+            }
+        }
+    }
+};
+
+const STORAGE_KEY = 'apEuroMasterEvidenceEntries';
+const STUDENT_KEY = 'apEuroMasterStudentName';
+const CURRENT_UNIT_KEY = 'apEuroMasterCurrentUnit';
+let entries = loadEntries();
+
+function init() {
+    migrateOldDataOnce();
+    populateUnitsFromData();
+    const savedUnit = localStorage.getItem(CURRENT_UNIT_KEY) || 'unit1';
+    document.getElementById('unitSelect').value = UNITS[savedUnit] ? savedUnit : 'unit1';
+    document.getElementById('unitSelect').addEventListener('change', updateUnitUI);
+    document.getElementById('categorySelect').addEventListener('change', renderObjectiveChecklist);
+    document.getElementById('studentName').addEventListener('blur', saveNameIfTyped);
+    updateUnitUI();
+    updateStudentDisplay();
+    displayEntries();
+}
+
+function migrateOldDataOnce() {
+    if (localStorage.getItem('apEuroMasterMigrated')) return;
+    const oldKeys = [
+        { key: 'apEuroReformationEntries', unitId: 'unit2' },
+        { key: 'apHistoryEntries', unitId: 'unit1' }
+    ];
+    oldKeys.forEach(old => {
+        try {
+            const oldEntries = JSON.parse(localStorage.getItem(old.key) || '[]');
+            if (Array.isArray(oldEntries) && oldEntries.length) {
+                oldEntries.forEach(entry => entries.push({ ...entry, unitId: old.unitId }));
+            }
+        } catch(e) {}
+    });
+    saveEntries();
+    localStorage.setItem('apEuroMasterMigrated', 'yes');
+}
+
+function loadEntries() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+    catch(e) { return []; }
+}
+function saveEntries() { localStorage.setItem(STORAGE_KEY, JSON.stringify(entries)); }
+function currentUnitId() { return document.getElementById('unitSelect').value; }
+function currentUnit() { return UNITS[currentUnitId()]; }
+
+function populateUnitsFromData() {
+    const select = document.getElementById('unitSelect');
+    select.innerHTML = Object.keys(UNITS).map(id => `<option value="${id}">${escapeHTML(UNITS[id].label)}</option>`).join('');
+}
+
+function updateUnitUI() {
+    const unitId = currentUnitId();
+    const unit = currentUnit();
+    localStorage.setItem(CURRENT_UNIT_KEY, unitId);
+    document.getElementById('unitSubtitle').textContent = unit.label;
+    document.getElementById('unitStatus').textContent = unit.active ? 'This unit is ready to use.' : 'This unit does not have learning objectives loaded yet.';
+    populateCategoryDropdown();
+    populateReferencePanel();
+    clearCurrentEntryOnly(false);
+    displayEntries();
+}
+
+function populateCategoryDropdown() {
+    const categorySelect = document.getElementById('categorySelect');
+    const unit = currentUnit();
+
+    if (!unit.active || Object.keys(unit.topics).length === 0) {
+        categorySelect.innerHTML = '<option value="">-- Categories not added yet --</option>';
+        categorySelect.disabled = true;
+        document.getElementById('objectiveChecklist').innerHTML = '<div class="disabled-note">This unit does not have learning objectives loaded yet.</div>';
+        return;
+    }
+
+    categorySelect.disabled = false;
+    categorySelect.innerHTML = '<option value="">-- Select a category --</option>' +
+        Object.keys(unit.topics).map(topicId => `<option value="${topicId}">${escapeHTML(unit.topics[topicId].label)}</option>`).join('');
+
+    document.getElementById('objectiveChecklist').innerHTML = '<p style="color:#999;">Choose a category first.</p>';
+}
+
+function renderObjectiveChecklist() {
+    const categorySelect = document.getElementById('categorySelect');
+    const checklist = document.getElementById('objectiveChecklist');
+    const topicId = categorySelect.value;
+    const unit = currentUnit();
+
+    if (!unit.active) {
+        checklist.innerHTML = '<div class="disabled-note">This unit does not have learning objectives loaded yet.</div>';
+        return;
+    }
+    if (!topicId || !unit.topics[topicId]) {
+        checklist.innerHTML = '<p style="color:#999;">Choose a category first.</p>';
+        return;
+    }
+
+    const topic = unit.topics[topicId];
+    if (!topic.objectives || topic.objectives.length === 0) {
+        checklist.innerHTML = '<div class="disabled-note">No learning objectives have been added for this category yet.</div>';
+        return;
+    }
+    checklist.innerHTML = topic.objectives.map((objective, index) => {
+        const id = `objective_${topicId}_${index}`;
+        return `<div class="concept-item">
+            <input class="objective-checkbox" type="checkbox" id="${id}" data-topic-id="${topicId}" data-index="${index}" onchange="toggleObjectiveExplanation('${id}')">
+            <div class="objective-content">
+                <label class="objective-label" for="${id}">${escapeHTML(objective)}</label>
+                <div class="objective-explanation" id="explanation_${id}">
+                    <textarea placeholder="Explain how your evidence connects to this learning objective..."></textarea>
+                </div>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+function toggleObjectiveExplanation(checkboxId) {
+    const checkbox = document.getElementById(checkboxId);
+    const explanation = document.getElementById('explanation_' + checkboxId);
+    if (!checkbox || !explanation) return;
+
+    if (checkbox.checked) {
+        explanation.classList.add('show');
+        const textarea = explanation.querySelector('textarea');
+        if (textarea) textarea.focus();
+    } else {
+        explanation.classList.remove('show');
+        const textarea = explanation.querySelector('textarea');
+        if (textarea) textarea.value = '';
+    }
+}
+
+function getSelectedObjectiveRecords() {
+    const selected = [];
+    const unit = currentUnit();
+    document.querySelectorAll('#objectiveChecklist .objective-checkbox:checked').forEach(cb => {
+        const topicId = cb.dataset.topicId;
+        const index = Number(cb.dataset.index);
+        if (!unit || !unit.topics || !unit.topics[topicId]) return;
+        const topic = unit.topics[topicId];
+        const objective = topic.objectives[index];
+        if (!objective) return;
+        const textarea = cb.closest('.concept-item').querySelector('textarea');
+        selected.push({
+            topicId,
+            topicLabel: topic.label,
+            objective,
+            explanation: textarea ? textarea.value.trim() : ''
         });
+    });
+    return selected;
+}
 
-        document.getElementById('unitTopic').addEventListener('change', function() {
-            const selected = this.value;
-            const conceptsList = document.getElementById('conceptsList');
-
-            if (!selected) {
-                conceptsList.innerHTML = '<p style="color: #999;">Select a topic above to see relevant learning objectives.</p>';
-                return;
-            }
-
-            const items = learningObjectives[selected];
-            conceptsList.innerHTML = items.map((objective, idx) => {
-                const checkboxId = 'objective_' + idx;
-                return `
-                    <div class="concept-item">
-                        <input type="checkbox" id="${checkboxId}" onchange="toggleExplanation('${checkboxId}')">
-                        <div class="concept-content">
-                            <label for="${checkboxId}">${escapeHTML(objective)}</label>
-                            <div class="concept-explanation" id="explanation_${checkboxId}">
-                                <textarea placeholder="Explain how your evidence connects to this learning objective..." data-objective="${escapeHTML(objective)}"></textarea>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
+function populateReferencePanel() {
+    const unit = currentUnit();
+    const panel = document.getElementById('referencePanel');
+    if (!unit.active || Object.keys(unit.topics).length === 0) {
+        panel.innerHTML = '<div class="disabled-note"><strong>' + escapeHTML(unit.label) + '</strong><br>The specific learning objectives for this unit are not loaded yet.</div>';
+        return;
+    }
+    let html = '';
+    Object.values(unit.topics).forEach(topic => {
+        html += `<div class="concept-title">${escapeHTML(topic.label)}</div>`;
+        topic.objectives.forEach(obj => {
+            html += `<div class="concept-item"><span>✓ ${escapeHTML(obj)}</span></div>`;
         });
+    });
+    panel.innerHTML = html;
+}
 
-        function toggleExplanation(checkboxId) {
-            const checkbox = document.getElementById(checkboxId);
-            const explanation = document.getElementById('explanation_' + checkboxId);
-            if (checkbox.checked) {
-                explanation.classList.add('show');
-                explanation.querySelector('textarea').focus();
-            } else {
-                explanation.classList.remove('show');
-                explanation.querySelector('textarea').value = '';
-            }
+function saveStudentName() {
+    const name = document.getElementById('studentName').value.trim();
+    if (!name) return showError('Type your name first, then click Save Name.');
+    localStorage.setItem(STUDENT_KEY, name);
+    updateStudentDisplay();
+    showSuccess('Name saved. You will not need to enter it for each entry.');
+}
+function saveNameIfTyped() {
+    const name = document.getElementById('studentName').value.trim();
+    if (name) { localStorage.setItem(STUDENT_KEY, name); updateStudentDisplay(); }
+}
+function getStudentName() {
+    return document.getElementById('studentName').value.trim() || localStorage.getItem(STUDENT_KEY) || '';
+}
+function updateStudentDisplay() {
+    const name = localStorage.getItem(STUDENT_KEY) || '';
+    document.getElementById('studentName').value = name;
+    document.getElementById('currentStudentDisplay').textContent = name ? 'Current student: ' + name : 'Current student: Not saved yet';
+}
+
+function addEntry() {
+    const unit = currentUnit();
+    if (!unit.active) return showError('This unit does not have learning objectives loaded yet.');
+    const studentName = getStudentName();
+    if (!studentName) return showError('Please enter your name once in Student Setup before saving.');
+    localStorage.setItem(STUDENT_KEY, studentName);
+    updateStudentDisplay();
+
+    const category = document.getElementById('categorySelect').value;
+    const selectedObjectives = getSelectedObjectiveRecords();
+    const sourceType = document.getElementById('sourceType').value;
+    const sourceTitle = document.getElementById('sourceTitle').value.trim();
+    const sourceLocation = document.getElementById('sourceLocation').value.trim();
+    const sourceUrl = document.getElementById('sourceUrl').value.trim();
+    const evidence = document.getElementById('textbookExcerpt').value.trim();
+
+    if (!evidence) return showError('Please enter evidence before choosing learning-objective connections.');
+    if (!sourceTitle && !sourceLocation && !sourceUrl) return showError('Please cite the evidence before choosing learning-objective connections: add a source title, page number, or URL.');
+    if (!category) return showError('Now choose the category that best fits this evidence.');
+    if (selectedObjectives.length === 0) return showError('Please check at least one learning objective connected to this evidence.');
+
+    for (const selected of selectedObjectives) {
+        if (!selected.explanation) {
+            return showError('Please explain how your evidence connects to each checked learning objective.');
         }
+    }
 
-        function addEntry() {
-            const studentName = getStudentName();
-            const textbookExcerpt = document.getElementById('textbookExcerpt').value.trim();
-            const unitTopic = document.getElementById('unitTopic').value;
-            const sourceType = document.getElementById('sourceType').value;
-            const sourceTitle = document.getElementById('sourceTitle').value.trim();
-            const sourceLocation = document.getElementById('sourceLocation').value.trim();
-            const sourceUrl = document.getElementById('sourceUrl').value.trim();
+    const firstTopic = selectedObjectives[0].topicLabel;
+    entries.push({
+        id: Date.now(),
+        unitId: currentUnitId(),
+        unitLabel: unit.label,
+        topicId: category,
+        topicLabel: firstTopic,
+        studentName,
+        sourceType,
+        sourceTitle,
+        sourceLocation,
+        sourceUrl,
+        textbookExcerpt: evidence,
+        conceptMappings: selectedObjectives.map(selected => ({
+            objective: selected.objective,
+            concept: selected.objective,
+            topicLabel: selected.topicLabel,
+            explanation: selected.explanation
+        })),
+        dateAdded: new Date().toLocaleDateString()
+    });
+    saveEntries();
+    clearCurrentEntryOnly(false);
+    showSuccess('Entry saved. Add another entry or export your chart when finished.');
+    displayEntries();
+}
 
-            if (!studentName) {
-                showError('⚠️ Please enter your name once in Student Setup before saving.');
+function clearCurrentEntryOnly(showMsg = true) {
+    ['sourceTitle','sourceLocation','sourceUrl','textbookExcerpt'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+    });
+    document.getElementById('sourceType').value = 'Textbook';
+    const categorySelect = document.getElementById('categorySelect');
+    if (categorySelect && !categorySelect.disabled) categorySelect.value = '';
+    renderObjectiveChecklist();
+    hideMessages();
+    if (showMsg) showSuccess('Current entry cleared. Saved work was not deleted.');
+}
+
+function resetCurrentUnit() {
+    const unit = currentUnit();
+    if (!confirm('This will delete saved entries for ' + unit.label + ' on this device. Export first if needed. Continue?')) return;
+    entries = entries.filter(entry => entry.unitId !== currentUnitId());
+    saveEntries();
+    clearCurrentEntryOnly(false);
+    displayEntries();
+    showSuccess('Saved entries for this unit were reset.');
+}
+
+function fullResetEverything() {
+    if (!confirm('This clears the name and all saved entries for all units on this device. Make sure work has been exported first. Continue?')) return;
+    entries = [];
+    saveEntries();
+    localStorage.removeItem(STUDENT_KEY);
+    updateStudentDisplay();
+    clearCurrentEntryOnly(false);
+    displayEntries();
+    showSuccess('Full reset complete. The page is ready for the next student.');
+}
+
+function entriesForCurrentUnit() { return entries.filter(entry => entry.unitId === currentUnitId()); }
+function formatSource(entry) {
+    const bits = [];
+    if (entry.sourceType) bits.push(entry.sourceType);
+    if (entry.sourceTitle) bits.push(entry.sourceTitle);
+    if (entry.sourceLocation) bits.push(entry.sourceLocation);
+    if (entry.sourceUrl) bits.push(entry.sourceUrl);
+    return bits.join(' | ') || 'Source not recorded';
+}
+function truncate(text, length) {
+    text = String(text || '');
+    return text.length > length ? text.slice(0, length).trim() + '…' : text;
+}
+function buildRows() {
+    const rows = [];
+    entriesForCurrentUnit().forEach(entry => {
+        (entry.conceptMappings || []).forEach(mapping => {
+            rows.push({
+                unit: entry.unitLabel || currentUnit().label,
+                learningObjective: mapping.objective || mapping.concept || '',
+                topic: mapping.topicLabel || entry.topicLabel || '',
+                source: formatSource(entry),
+                evidence: entry.textbookExcerpt || '',
+                explanation: mapping.explanation || '',
+                date: entry.dateAdded || ''
+            });
+        });
+    });
+    rows.sort((a,b) => (a.topic + a.learningObjective).localeCompare(b.topic + b.learningObjective));
+    return rows;
+}
+
+function displayEntries() {
+    const currentEntries = entriesForCurrentUnit();
+    const entriesList = document.getElementById('entriesList');
+    if (currentEntries.length === 0) {
+        entriesList.innerHTML = '<div class="empty-state">No entries yet for this unit.</div>';
+        document.getElementById('chartPreview').innerHTML = '';
+        return;
+    }
+    entriesList.innerHTML = currentEntries.map(entry => `<div class="entry-card">
+        <button class="delete-btn" onclick="deleteEntry(${entry.id})">Delete</button>
+        <h4>${escapeHTML(entry.topicLabel || 'Category')}</h4>
+        <p><strong>Source:</strong> ${escapeHTML(formatSource(entry))}</p>
+        <p><strong>Evidence:</strong> <em>${escapeHTML(truncate(entry.textbookExcerpt, 180))}</em></p>
+        ${(entry.conceptMappings || []).map(m => `<div class="mapping-mini"><strong>LO:</strong> ${escapeHTML(truncate(m.objective || m.concept, 170))}<br><strong>Explanation:</strong> ${escapeHTML(truncate(m.explanation, 220))}</div>`).join('')}
+        <p class="small-note">Saved: ${escapeHTML(entry.dateAdded || '')}</p>
+    </div>`).join('');
+    renderChartPreview();
+}
+
+function deleteEntry(id) {
+    if (!confirm('Delete this saved entry?')) return;
+    entries = entries.filter(e => e.id !== id);
+    saveEntries();
+    displayEntries();
+}
+
+function renderChartPreview() {
+    const rows = buildRows();
+    if (!rows.length) { document.getElementById('chartPreview').innerHTML = ''; return; }
+    document.getElementById('chartPreview').innerHTML = '<table><thead><tr><th>Learning Objective</th><th>Category</th><th>Source / Page</th><th>Evidence</th><th>Explanation</th></tr></thead><tbody>' +
+        rows.map(r => `<tr><td class="lo-cell">${escapeHTML(r.learningObjective)}</td><td class="short-cell">${escapeHTML(r.topic)}</td><td class="short-cell">${escapeHTML(r.source)}</td><td class="wide-cell">${escapeHTML(r.evidence)}</td><td class="wide-cell">${escapeHTML(r.explanation)}</td></tr>`).join('') + '</tbody></table>';
+}
+
+function reportTitle() {
+    const student = getStudentName() || 'Student';
+    return `AP European History Evidence Chart - ${currentUnit().label} - ${student}`;
+}
+function buildChartReportText() {
+    const rows = buildRows();
+    let text = reportTitle() + '\nExported: ' + new Date().toLocaleString() + '\n\n';
+    rows.forEach((r, i) => {
+        text += `${i+1}. Learning Objective: ${r.learningObjective}\n`;
+        text += `Category: ${r.topic}\n`;
+        text += `Source/Page: ${r.source}\n`;
+        text += `Evidence: ${r.evidence}\n`;
+        text += `Explanation: ${r.explanation}\n\n`;
+    });
+    return text;
+}
+function buildChartReportHTML() {
+    const rows = buildRows();
+    const rowHTML = rows.map(r => `<tr><td>${escapeHTML(r.learningObjective)}</td><td>${escapeHTML(r.topic)}</td><td>${escapeHTML(r.source)}</td><td>${escapeHTML(r.evidence)}</td><td>${escapeHTML(r.explanation)}</td></tr>`).join('');
+    return `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${escapeHTML(reportTitle())}</title><style>
+        body{font-family:Arial,sans-serif;margin:24px;color:#222;} h1{font-size:20px;margin-bottom:4px;} p{margin-top:0;color:#555;font-size:12px;} table{border-collapse:collapse;width:100%;font-size:11px;} th{background:#eee;text-align:left;padding:6px;border:1px solid #ccc;} td{vertical-align:top;padding:6px;border:1px solid #ccc;} tr:nth-child(even){background:#fafafa;} @media print{body{margin:10px;} table{font-size:10px;}}
+    </style></head><body><h1>${escapeHTML(reportTitle())}</h1><p>Exported: ${escapeHTML(new Date().toLocaleString())}</p><table><thead><tr><th>Learning Objective</th><th>Category</th><th>Source / Page</th><th>Evidence</th><th>Explanation</th></tr></thead><tbody>${rowHTML}</tbody></table></body></html>`;
+}
+function checkEntriesBeforeExport() {
+    if (entriesForCurrentUnit().length === 0) { alert('No entries to export for this unit.'); return false; }
+    return true;
+}
+function safeFileName(name) { return String(name || 'Student').replace(/[^a-z0-9]/gi, '-').replace(/-+/g, '-').replace(/^-|-$/g, '') || 'Student'; }
+function downloadFile(content, filename, mime) {
+    const blob = new Blob([content], { type: mime });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = filename; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+}
+function exportProgressBackup() {
+    const backup = {
+        app: 'AP European History Evidence Mapper',
+        version: 1,
+        exportedAt: new Date().toISOString(),
+        studentName: getStudentName(),
+        currentUnitId: currentUnitId(),
+        entries: entries
+    };
+    downloadFile(JSON.stringify(backup, null, 2), `AP-Euro-Progress-Backup-${safeFileName(getStudentName())}-${new Date().toISOString().split('T')[0]}.json`, 'application/json');
+}
+function triggerImportBackup() {
+    const input = document.getElementById('backupImportFile');
+    if (input) input.click();
+}
+function importProgressBackup(event) {
+    const file = event.target.files && event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const data = JSON.parse(e.target.result);
+            const importedEntries = Array.isArray(data) ? data : data.entries;
+            if (!Array.isArray(importedEntries)) {
+                showError('That file does not look like an Evidence Mapper progress backup.');
+                event.target.value = '';
                 return;
             }
 
-            localStorage.setItem(STUDENT_KEY, studentName);
-            updateStudentDisplay();
-
-            if (!textbookExcerpt || !unitTopic) {
-                showError('⚠️ Please provide evidence and select a topic.');
+            if (!confirm('Import this progress backup? It will add saved entries for all units and skip duplicates.')) {
+                event.target.value = '';
                 return;
             }
 
-            if (!sourceTitle && !sourceLocation && !sourceUrl) {
-                showError('⚠️ Please record at least one source detail: title, page/section, or URL.');
-                return;
-            }
+            const existingIds = new Set(entries.map(entry => String(entry.id)));
+            let added = 0;
+            let skipped = 0;
 
-            const selectedMappings = [];
-            const checkedBoxes = Array.from(document.querySelectorAll('#conceptsList input[type="checkbox"]:checked'));
+            importedEntries.forEach(entry => {
+                const restored = { ...entry };
+                if (!restored.unitId) restored.unitId = currentUnitId();
+                if (!restored.id) restored.id = Date.now() + '-' + Math.random().toString(36).slice(2);
 
-            for (const cb of checkedBoxes) {
-                const objectiveLabel = cb.nextElementSibling.querySelector('label').textContent;
-                const explanation = cb.closest('.concept-item').querySelector('textarea').value.trim();
-
-                if (!explanation) {
-                    showError('⚠️ Please explain how your evidence connects to: "' + objectiveLabel + '"');
+                const idKey = String(restored.id);
+                if (existingIds.has(idKey)) {
+                    skipped++;
                     return;
                 }
 
-                selectedMappings.push({
-                    concept: objectiveLabel,
-                    objective: objectiveLabel,
-                    explanation: explanation
-                });
+                entries.push(restored);
+                existingIds.add(idKey);
+                added++;
+            });
+
+            if (data.studentName) {
+                localStorage.setItem(STUDENT_KEY, data.studentName);
+                document.getElementById('studentName').value = data.studentName;
+                updateStudentDisplay();
             }
 
-            if (selectedMappings.length === 0) {
-                showError('⚠️ Please select at least one learning objective and provide an explanation.');
-                return;
-            }
-
-            const entry = {
-                id: Date.now(),
-                studentName,
-                unitTopic,
-                sourceType,
-                sourceTitle,
-                sourceLocation,
-                sourceUrl,
-                textbookExcerpt,
-                conceptMappings: selectedMappings,
-                dateAdded: new Date().toLocaleDateString()
-            };
-
-            entries.push(entry);
             saveEntries();
-            clearCurrentEntry();
-            showSuccess('✓ Entry saved. Add another entry or export your chart when finished.');
-            displayEntries();
-        }
 
-        function clearCurrentEntry() {
-            document.getElementById('textbookExcerpt').value = '';
-            document.getElementById('sourceType').value = 'Textbook/Class Reading';
-            document.getElementById('sourceTitle').value = '';
-            document.getElementById('sourceLocation').value = '';
-            document.getElementById('sourceUrl').value = '';
-            document.getElementById('unitTopic').value = '';
-            document.getElementById('conceptsList').innerHTML = '<p style="color: #999;">Select a topic above to see relevant learning objectives.</p>';
-        }
-
-        function fullResetForNextStudent() {
-            if (!confirm('This will clear the student name, all saved entries, and the current form. Make sure the work has been exported first. Continue?')) {
-                return;
-            }
-            entries = [];
-            localStorage.removeItem(STORAGE_KEY);
-            localStorage.removeItem(STUDENT_KEY);
-            document.getElementById('studentName').value = '';
-            clearCurrentEntry();
-            updateStudentDisplay();
-            displayEntries();
-            showSuccess('✓ Page reset. It is ready for the next student.');
-        }
-
-        function deleteEntry(id) {
-            if (confirm('Delete this saved entry?')) {
-                entries = entries.filter(e => e.id !== id);
-                saveEntries();
+            if (data.currentUnitId && UNITS[data.currentUnitId]) {
+                document.getElementById('unitSelect').value = data.currentUnitId;
+                updateUnitUI();
+            } else {
                 displayEntries();
             }
-        }
 
-        function showSuccess(message) {
-            const successMessage = document.getElementById('successMessage');
-            successMessage.textContent = message;
-            successMessage.classList.add('show');
-            setTimeout(() => successMessage.classList.remove('show'), 3500);
+            showSuccess(`Progress backup imported. Added ${added} entr${added === 1 ? 'y' : 'ies'}${skipped ? ` and skipped ${skipped} duplicate${skipped === 1 ? '' : 's'}` : ''}.`);
+        } catch(err) {
+            showError('Could not import that backup file. Make sure it is the JSON progress backup from this tool.');
+        } finally {
+            event.target.value = '';
         }
+    };
+    reader.readAsText(file);
+}
 
-        function showError(message) {
-            const errorMessage = document.getElementById('errorMessage');
-            errorMessage.textContent = message;
-            errorMessage.classList.add('show');
-            setTimeout(() => errorMessage.classList.remove('show'), 5000);
-        }
+function exportChartText() {
+    if (!checkEntriesBeforeExport()) return;
+    downloadFile(buildChartReportText(), `AP-Euro-${safeFileName(currentUnit().label)}-${safeFileName(getStudentName())}.txt`, 'text/plain');
+}
+function exportChartHTML() {
+    if (!checkEntriesBeforeExport()) return;
+    downloadFile(buildChartReportHTML(), `AP-Euro-${safeFileName(currentUnit().label)}-${safeFileName(getStudentName())}.html`, 'text/html');
+}
+function copyChartReport() {
+    if (!checkEntriesBeforeExport()) return;
+    const report = buildChartReportText();
+    navigator.clipboard.writeText(report).then(() => alert('Chart copied.')).catch(() => {
+        const ta = document.createElement('textarea'); ta.value = report; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); alert('Chart copied.');
+    });
+}
+function printChartReport() {
+    if (!checkEntriesBeforeExport()) return;
+    const w = window.open('', '_blank');
+    w.document.open(); w.document.write(buildChartReportHTML()); w.document.close(); w.focus(); setTimeout(() => w.print(), 300);
+}
+function showSuccess(msg) { const el = document.getElementById('successMessage'); el.textContent = '✓ ' + msg; el.classList.add('show'); document.getElementById('errorMessage').classList.remove('show'); setTimeout(() => el.classList.remove('show'), 4000); }
+function showError(msg) { const el = document.getElementById('errorMessage'); el.textContent = '⚠️ ' + msg; el.classList.add('show'); document.getElementById('successMessage').classList.remove('show'); }
+function hideMessages() { document.getElementById('successMessage').classList.remove('show'); document.getElementById('errorMessage').classList.remove('show'); }
+function escapeHTML(str) { return String(str || '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#039;','"':'&quot;'}[c])); }
 
-        function escapeHTML(text) {
-            return String(text ?? '')
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/\"/g, '&quot;')
-                .replace(/'/g, '&#039;');
-        }
-
-        function escapeAttribute(text) {
-            return escapeHTML(text).replace(/`/g, '&#096;');
-        }
-
-        function formatTopic(topic) {
-            const topicLabels = {
-                renaissance: 'The Renaissance',
-                exploration: 'Age of Exploration',
-                economic: 'Economic & Social Development'
-            };
-            return topicLabels[topic] || topic || 'Topic not recorded';
-        }
-
-        function formatSource(entry) {
-            const type = entry.sourceType || 'Source';
-            const title = entry.sourceTitle || 'Title not recorded';
-            const location = entry.sourceLocation ? ' | ' + entry.sourceLocation : '';
-            const url = entry.sourceUrl ? ' | ' + entry.sourceUrl : '';
-            return type + ': ' + title + location + url;
-        }
-
-        function truncateText(text, maxLength) {
-            const clean = String(text || '').replace(/\s+/g, ' ').trim();
-            return clean.length > maxLength ? clean.substring(0, maxLength) + '...' : clean;
-        }
-
-        function getChartRows() {
-            const rows = [];
-            entries.forEach((entry, entryIndex) => {
-                const mappings = entry.conceptMappings || [];
-                mappings.forEach(mapping => {
-                    rows.push({
-                        entryNumber: entryIndex + 1,
-                        studentName: entry.studentName || getStudentName() || 'Student',
-                        topic: formatTopic(entry.unitTopic),
-                        learningObjective: mapping.objective || mapping.concept || 'Learning objective not recorded',
-                        source: formatSource(entry),
-                        evidence: entry.textbookExcerpt || '',
-                        explanation: mapping.explanation || '',
-                        dateAdded: entry.dateAdded || ''
-                    });
-                });
-            });
-            return rows.sort((a, b) => a.learningObjective.localeCompare(b.learningObjective) || a.entryNumber - b.entryNumber);
-        }
-
-        function displayEntries() {
-            const entriesList = document.getElementById('entriesList');
-            const chartPreview = document.getElementById('chartPreview');
-            const rows = getChartRows();
-
-            if (entries.length === 0) {
-                chartPreview.innerHTML = '';
-                entriesList.innerHTML = '<div class="empty-state">No entries yet. Add your first evidence mapping above!</div>';
-                return;
-            }
-
-            chartPreview.innerHTML = buildPreviewChart(rows);
-
-            entriesList.innerHTML = entries.map(entry => {
-                const safeExcerpt = escapeHTML(truncateText(entry.textbookExcerpt, 150));
-                return `
-                    <div class="entry-card">
-                        <button class="delete-btn" onclick="deleteEntry(${entry.id})">Delete</button>
-                        <h4>📝 Entry for ${escapeHTML(entry.studentName || 'Student')}</h4>
-                        <p><strong>Topic:</strong> ${escapeHTML(formatTopic(entry.unitTopic))}</p>
-                        <div class="entry-source"><strong>Source:</strong> ${escapeHTML(formatSource(entry))}</div>
-                        <p><strong>Evidence:</strong> <em>"${safeExcerpt}"</em></p>
-                        <div>
-                            <strong>Learning Objective Connections:</strong>
-                            ${(entry.conceptMappings || []).map(mapping => `
-                                <div class="concept-mapping">
-                                    <strong>• ${escapeHTML(mapping.objective || mapping.concept)}</strong>
-                                    <p style="margin-top: 6px; color: #555;">${escapeHTML(mapping.explanation)}</p>
-                                </div>
-                            `).join('')}
-                        </div>
-                        <small>Added: ${escapeHTML(entry.dateAdded)}</small>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function buildPreviewChart(rows) {
-            const previewRows = rows.map(row => `
-                <tr>
-                    <td>${escapeHTML(row.learningObjective)}</td>
-                    <td>${escapeHTML(row.topic)}</td>
-                    <td>${escapeHTML(row.source)}</td>
-                    <td>${escapeHTML(truncateText(row.evidence, 120))}</td>
-                    <td>${escapeHTML(truncateText(row.explanation, 120))}</td>
-                </tr>
-            `).join('');
-
-            return `
-                <h3 style="color:#667eea; margin: 10px 0;">Chart Preview: Organized by Learning Objective</h3>
-                <table class="chart-preview">
-                    <thead>
-                        <tr>
-                            <th>Learning Objective</th>
-                            <th>Topic</th>
-                            <th>Source / Page</th>
-                            <th>Evidence</th>
-                            <th>Explanation</th>
-                        </tr>
-                    </thead>
-                    <tbody>${previewRows}</tbody>
-                </table>
-            `;
-        }
-
-        function buildChartReportText() {
-            const rows = getChartRows();
-            const reportDate = new Date().toLocaleDateString();
-            const student = getStudentName() || rows[0]?.studentName || 'Student';
-            let report = '';
-            report += 'AP Euro Evidence Mapper — Learning Objective Chart\n';
-            report += 'Student: ' + student + ' | Export Date: ' + reportDate + ' | Rows: ' + rows.length + '\n';
-            report += 'Unit 1: Renaissance and Exploration (c. 1450–1648)\n\n';
-            report += 'Learning Objective\tTopic\tSource / Page\tEvidence\tExplanation\n';
-            rows.forEach(row => {
-                report += cleanForText(row.learningObjective) + '\t' +
-                          cleanForText(row.topic) + '\t' +
-                          cleanForText(row.source) + '\t' +
-                          cleanForText(row.evidence) + '\t' +
-                          cleanForText(row.explanation) + '\n';
-            });
-            return report;
-        }
-
-        function cleanForText(text) {
-            return String(text || '').replace(/\t/g, ' ').replace(/\r?\n/g, ' ').replace(/\s+/g, ' ').trim();
-        }
-
-        function buildChartReportHTML() {
-            const rows = getChartRows();
-            const reportDate = new Date().toLocaleDateString();
-            const student = getStudentName() || rows[0]?.studentName || 'Student';
-            const rowHTML = rows.map(row => `
-                <tr>
-                    <td>${escapeHTML(row.learningObjective)}</td>
-                    <td>${escapeHTML(row.topic)}</td>
-                    <td>${escapeHTML(row.source)}</td>
-                    <td>${escapeHTML(row.evidence).replace(/\n/g, '<br>')}</td>
-                    <td>${escapeHTML(row.explanation).replace(/\n/g, '<br>')}</td>
-                </tr>
-            `).join('');
-
-            return `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>AP Euro Evidence Mapper Learning Objective Chart</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 18px;
-            color: #222;
-            font-size: 10.5px;
-            line-height: 1.25;
-        }
-        header {
-            border-bottom: 2px solid #4f46e5;
-            padding-bottom: 6px;
-            margin-bottom: 10px;
-        }
-        h1 {
-            color: #4f46e5;
-            font-size: 18px;
-            margin: 0 0 4px 0;
-        }
-        p { margin: 3px 0; }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            table-layout: fixed;
-        }
-        th, td {
-            border: 1px solid #999;
-            padding: 5px;
-            vertical-align: top;
-            word-wrap: break-word;
-        }
-        th {
-            background: #e8eaff;
-            font-weight: bold;
-            text-align: left;
-        }
-        th:nth-child(1), td:nth-child(1) { width: 25%; }
-        th:nth-child(2), td:nth-child(2) { width: 10%; }
-        th:nth-child(3), td:nth-child(3) { width: 18%; }
-        th:nth-child(4), td:nth-child(4) { width: 22%; }
-        th:nth-child(5), td:nth-child(5) { width: 25%; }
-        tr { page-break-inside: avoid; }
-        @page { margin: 0.35in; }
-        @media print {
-            body { margin: 0; font-size: 9.5px; }
-            th, td { padding: 4px; }
-            header { margin-bottom: 8px; }
-        }
-    </style>
-</head>
-<body>
-    <header>
-        <h1>AP Euro Evidence Mapper — Learning Objective Chart</h1>
-        <p><strong>Student:</strong> ${escapeHTML(student)} | <strong>Export Date:</strong> ${escapeHTML(reportDate)} | <strong>Rows:</strong> ${rows.length}</p>
-        <p><strong>Unit 1:</strong> Renaissance and Exploration (c. 1450–1648)</p>
-    </header>
-    <table>
-        <thead>
-            <tr>
-                <th>Learning Objective</th>
-                <th>Topic</th>
-                <th>Source / Page</th>
-                <th>Evidence</th>
-                <th>Explanation</th>
-            </tr>
-        </thead>
-        <tbody>${rowHTML}</tbody>
-    </table>
-</body>
-</html>`;
-        }
-
-        function safeFileName(name) {
-            return String(name || 'Student')
-                .replace(/[^a-z0-9]/gi, '-')
-                .replace(/-+/g, '-')
-                .replace(/^-|-$/g, '') || 'Student';
-        }
-
-        function downloadFile(content, filename, mimeType) {
-            const dataBlob = new Blob([content], { type: mimeType });
-            const url = URL.createObjectURL(dataBlob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = filename;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
-        }
-
-        function checkEntriesBeforeExport() {
-            if (entries.length === 0) {
-                alert('No entries to export. Add some evidence mappings first!');
-                return false;
-            }
-            return true;
-        }
-
-        function exportChartText() {
-            if (!checkEntriesBeforeExport()) return;
-            const student = safeFileName(getStudentName() || entries[0]?.studentName);
-            const date = new Date().toISOString().split('T')[0];
-            downloadFile(buildChartReportText(), `AP-Euro-LO-Chart-${student}-${date}.txt`, 'text/plain');
-        }
-
-        function exportChartHTML() {
-            if (!checkEntriesBeforeExport()) return;
-            const student = safeFileName(getStudentName() || entries[0]?.studentName);
-            const date = new Date().toISOString().split('T')[0];
-            downloadFile(buildChartReportHTML(), `AP-Euro-LO-Chart-${student}-${date}.html`, 'text/html');
-        }
-
-        function copyChartReport() {
-            if (!checkEntriesBeforeExport()) return;
-            const report = buildChartReportText();
-            navigator.clipboard.writeText(report).then(() => {
-                alert('Chart copied! Students can paste it into Canvas, Google Docs, or an email.');
-            }).catch(() => {
-                const textArea = document.createElement('textarea');
-                textArea.value = report;
-                document.body.appendChild(textArea);
-                textArea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textArea);
-                alert('Chart copied! Students can paste it into Canvas, Google Docs, or an email.');
-            });
-        }
-
-        function printChartReport() {
-            if (!checkEntriesBeforeExport()) return;
-            const reportWindow = window.open('', '_blank');
-            reportWindow.document.open();
-            reportWindow.document.write(buildChartReportHTML());
-            reportWindow.document.close();
-            reportWindow.focus();
-            setTimeout(() => reportWindow.print(), 300);
-        }
-
-        updateStudentDisplay();
-        displayEntries();
-    </script>
+document.addEventListener('DOMContentLoaded', init);
+</script>
 </body>
 </html>
